@@ -1,0 +1,52 @@
+name: CI and Deploy
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build and start docker stack
+        run: |
+          docker compose up -d --build
+          docker compose ps
+
+      - name: Install composer deps (with dev) and prepare testing env
+        run: |
+          docker compose exec -T php composer install --no-interaction --prefer-dist
+          docker compose exec -T php cp .env.testing.example .env.testing
+          docker compose exec -T php php artisan key:generate --env=testing --force
+
+      - name: Run tests
+        run: |
+          docker compose exec -T php php artisan test
+
+      - name: Shutdown docker stack
+        if: always()
+        run: docker compose down -v
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to server via SSH
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_KEY:  ${{ secrets.DEPLOY_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "$DEPLOY_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p "${DEPLOY_PORT:-22}" -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+          ssh -p "${DEPLOY_PORT:-22}" "$DEPLOY_USER@$DEPLOY_HOST" "bash -lc '/home/admin/deploy.sh'"
+
