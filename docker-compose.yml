@@ -1,5 +1,5 @@
 services:
-  # PHP-FPM сервис для Laravel
+  # PHP-FPM сервис для laravel
   php:
     build:
       context: .
