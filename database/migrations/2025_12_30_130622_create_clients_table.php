@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('city');
             $table->boolean('is_subscribed')->default(false);
             $table->integer('user_time_zone')->default(0);
-            $table->json('sent_time')->default([10]);
+            $table->json('sent_time');
             $table->timestamps();
         });
     }
