@@ -2,6 +2,7 @@
 
 namespace App\TelegramBot\Infrastructure\Adapters;
 
+use App\TelegramBot\Application\DTO\TelegramSendMessageDto;
 use App\TelegramBot\Application\TelegramBotApiInterface;
 use Telegram\Bot\Api;
 use Telegram\Bot\Exceptions\TelegramSDKException;
@@ -13,9 +14,13 @@ class TelegramBotApiAdapter implements TelegramBotApiInterface
     )
     {}
 
-    public function sendMessage()
+    public function sendMessage(TelegramSendMessageDto $dto): void
     {
-
+        $this->apiBot->sendMessage([
+            'chat_id' => $dto->chatId,
+            'text' => $dto->text,
+            'reply_markup' => $dto->replyMarkup,
+        ]);
     }
 
     /**

@@ -29,8 +29,4 @@ class Client extends Model
         'user_time_zone' => 'integer',
         'sent_time' => 'array',
     ];
-    public function chat(): BelongsTo
-    {
-        return $this->belongsTo(Chat::class, 'chat_id');
-    }
 }
