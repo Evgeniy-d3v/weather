@@ -14,6 +14,8 @@ return [
 
     'bot_username' => env('TELEGRAM_BOT_USERNAME'),
 
+    'webhook_url' => env('APP_URL') . env('TELEGRAM_WEBHOOK_URL'),
+
     /*
     |--------------------------------------------------------------------------
     | Update Polling Settings
