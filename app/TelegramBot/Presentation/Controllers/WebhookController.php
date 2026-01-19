@@ -2,14 +2,14 @@
 
 namespace App\TelegramBot\Presentation\Controllers;
 
+use App\TelegramBot\Application\Jobs\HandleTelegramWebHookJob;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 class WebhookController
 {
-    public function __construct(
-    ) {
+    public function __construct() {
     }
 
     /**
@@ -20,6 +20,8 @@ class WebhookController
      */
     public function handle(Request $request): Response
     {
+        $payload = $request->all();
+        dispatch(new HandleTelegramWebHookJob($payload));
         Log::debug('Telegram webhook payload: ' . json_encode($request->all()));
 
         return response()->noContent(Response::HTTP_OK);

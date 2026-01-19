@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('chat_id')->unique();
             $table->string('user_full_name')->nullable();
+            $table->string('user_username')->nullable();
             $table->string('city');
             $table->boolean('is_subscribed')->default(false);
             $table->integer('user_time_zone')->default(0);

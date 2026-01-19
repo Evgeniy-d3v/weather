@@ -23,6 +23,7 @@ class Client extends Model
     protected $casts = [
         'chat_id' => 'integer',
         'user_full_name' => 'string',
+        'user_username' => 'string',
         'city' => 'string',
         'is_subscribed' => 'boolean',
         'user_time_zone' => 'integer',
