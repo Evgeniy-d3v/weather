@@ -12,6 +12,5 @@ final readonly class TelegramWebHookDto
         public string $username,
         public string $text,
     )
-    {
-    }
+    {}
 }
