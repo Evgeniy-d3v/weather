@@ -73,9 +73,11 @@ class WeatherResponseMapper
             default  => 'Сильный дождь',
         };
     }
-    private function parseSnowPrecipitation(float $precipitation): string
+    private function parseSnowPrecipitation(?float $precipitation): string
     {
-
+        if ($precipitation === null) {
+            return 'нет данных';
+        }
         return match (true) {
             $precipitation == 0  => 'ясно',
             $precipitation < 1  => 'лёгкий сег',
