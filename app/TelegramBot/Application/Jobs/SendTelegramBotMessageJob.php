@@ -5,13 +5,12 @@ namespace App\TelegramBot\Application\Jobs;
 use App\TelegramBot\Application\DTO\TelegramSendMessageDto;
 use App\TelegramBot\Application\TelegramBotApiInterface;
 use App\TelegramBot\Domain\Entities\CachePrefixEnum;
-use App\TelegramBot\Presentation\Mappers\TelegramWebHookMapper;
 use Cache\CacheKeyFactory;
 use Cache\CacheLocker;
 use Illuminate\Support\Facades\Log;
-use Job;
+use Shared\Job\AbstractJob;
 
-class SendTelegramBotMessageJob extends Job
+class SendTelegramBotMessageJob extends AbstractJob
 {
     public function __construct(
         public TelegramSendMessageDto $telegramSendMessageDto,

@@ -6,9 +6,9 @@ use App\TelegramBot\Application\UseCase\ProcessIncomingTelegramUpdate;
 use App\TelegramBot\Presentation\Mappers\TelegramWebHookMapper;
 use Cache\CacheLocker;
 use Illuminate\Support\Facades\Log;
-use Job;
+use Shared\Job\AbstractJob;
 
-class HandleTelegramWebHookJob extends Job
+class HandleTelegramWebHookJob extends AbstractJob
 {
 
     public function __construct(
