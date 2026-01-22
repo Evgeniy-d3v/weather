@@ -1,3 +1,17 @@
+# Шаблон для воркеров
+x-worker-base: &worker-base
+  build:
+    context: .
+    dockerfile: Dockerfile
+  working_dir: /var/www/html
+  restart: unless-stopped
+  volumes:
+    - ./:/var/www/html
+  depends_on:
+    - rabbitmq
+    - mysql
+  networks:
+    - weather-network
 services:
   # PHP-FPM сервис для laravel
   php:
@@ -87,6 +101,24 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
       - weather-network
+
+  # Очереди
+  queue-handle_telegram_webhook:
+    <<: *worker-base
+    container_name: weather-queue
+    command: >
+      php artisan queue:work rabbitmq
+      --queue=handle_telegram_webhook
+      --sleep=3 --tries=3 --timeout=90 --backoff=30 --max-time=3600
+
+  queue-send-telegram:
+    <<: *worker-base
+    container_name: weather-queue-send-telegram
+    command: >
+      php artisan queue:work rabbitmq
+      --queue=send_telegram_message
+      --sleep=3 --tries=5 --timeout=120 --backoff=60 --max-time=3600
+
 
 networks:
   weather-network:
