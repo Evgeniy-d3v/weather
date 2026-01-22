@@ -12,19 +12,24 @@ class WeatherApiExecutor implements WeatherApiExecutorInterface
         public Client $httpClient,
         public WeatherResponseMapper $responseMapper,
     )
-    {
+    {}
 
+    public function getCurrentWeather(string $latitude, string $longitude): WeatherDto
+    {
+        $response = $this->httpClient->get('weather?lat='.$latitude.'&lon='.$longitude.'&appid='. config('weather.api_token'));
+        $weatherData = json_decode($response->getBody()->getContents(), true);
+        Log::debug('Current weather response', $weatherData);
+        return $this->responseMapper->mapCurrentWeather($weatherData);
     }
-
-//    public function getCurrentWeather(float $latitude, float $longitude): void
-    public function getCurrentWeather(): void
-
+    public function getFiveDayThreeHourForecast(string $latitude, string $longitude, int $daysCount): WeatherDtoCollection
     {
+        $response = $this->httpClient->get('forecast/?lat='.'44.34'.'&lon='.'10.99'.'&appid='. config('weather.api_token'));
 
-        $response = $this->httpClient->get('weather?lat='.'59.3293'.'&lon='.'18.0686'.'&appid='.config('weather.api_key'));
+        $weatherData = json_decode($response->getBody()->getContents(), true);
 
-        $data = json_decode($response->getBody()->getContents(), true);
+        Log::debug('Hourly forecast response', $weatherData);
+        return $this->responseMapper->mapHourlyForecast(json_decode($response->getBody()->getContents(), true));
 
-        Log::debug('WeatherApiExecutor getCurrentWeather: ' . json_encode($data));
+
     }
 }
