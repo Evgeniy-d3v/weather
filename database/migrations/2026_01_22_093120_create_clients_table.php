@@ -16,10 +16,9 @@ return new class extends Migration
             $table->integer('chat_id')->unique();
             $table->string('user_full_name')->nullable();
             $table->string('user_username')->nullable();
-            $table->string('city');
+            $table->unsignedBigInteger('city_id')->nullable();
             $table->boolean('is_subscribed')->default(false);
-            $table->integer('user_time_zone')->default(0);
-            $table->json('sent_time');
+            $table->json('sent_time')->default(json_encode([]));
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clents');
+        Schema::dropIfExists('clients');
     }
 };

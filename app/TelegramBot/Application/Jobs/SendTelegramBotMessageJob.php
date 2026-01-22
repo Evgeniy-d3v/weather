@@ -29,7 +29,7 @@ class SendTelegramBotMessageJob extends Job
         CacheKeyFactory $cacheKeyFactory,
     ): void
     {
-        //todo (Мб стоит подумать на тем, что пользователь будть жать на кнопку отправки несколько раз и тогда сообщение не отправится)
+        //todo (Мб стоит подумать на тем, что пользователь будет жать на кнопку отправки несколько раз и тогда сообщение не отправится)
         $uniqueKey = $cacheKeyFactory->generateUniqKey(
             CachePrefixEnum::SEND_MESSAGE->value,
             $this->telegramSendMessageDto->chatId,

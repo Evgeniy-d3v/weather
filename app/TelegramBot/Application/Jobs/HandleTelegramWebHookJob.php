@@ -37,7 +37,5 @@ class HandleTelegramWebHookJob extends Job
         $processIncomingTelegramUpdate->handle(
             $hookMapper->mapWebHook($this->payload)
         );
-
-
     }
 }
