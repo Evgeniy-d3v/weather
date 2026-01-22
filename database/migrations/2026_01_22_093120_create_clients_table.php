@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('user_username')->nullable();
             $table->unsignedBigInteger('city_id')->nullable();
             $table->boolean('is_subscribed')->default(false);
-            $table->json('sent_time')->default(json_encode([]));
+            $table->json('sent_time')->nullable();
             $table->timestamps();
         });
     }
