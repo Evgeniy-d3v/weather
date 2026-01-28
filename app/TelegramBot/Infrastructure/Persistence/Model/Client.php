@@ -2,6 +2,7 @@
 
 namespace App\TelegramBot\Infrastructure\Persistence\Model;
 
+use App\GeoDecoder\Infrastructure\Persistence\Model\City;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

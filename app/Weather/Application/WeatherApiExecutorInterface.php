@@ -9,7 +9,7 @@ interface WeatherApiExecutorInterface
 {
     public function getCurrentWeather(string $latitude, string $longitude): WeatherDto;
 
-    public function getFiveDayThreeHourForecast(string $latitude, string $longitude, int $daysCount): WeatherDtoCollection;
+    public function getFiveDayThreeHourForecast(string $latitude, string $longitude): WeatherDtoCollection;
 
 
 }

@@ -84,6 +84,7 @@ class WeatherResponseMapper
             weatherCondition: $weatherCondition,
             weatherDescription: $weatherDescription,
             precipitation: $this->precipitation($temperature, $precipitationAmount),
+            timeZone: $weatherItem['timezone'],
         );
     }
     private function parseWindDirection(?float $windDirection): string

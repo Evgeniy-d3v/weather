@@ -5,8 +5,8 @@ namespace App\TelegramBot\Application\Jobs;
 use App\TelegramBot\Application\DTO\TelegramSendMessageDto;
 use App\TelegramBot\Application\TelegramBotApiInterface;
 use App\TelegramBot\Domain\Entities\CachePrefixEnum;
-use Cache\CacheKeyFactory;
-use Cache\CacheLocker;
+use Shared\Cache\CacheKeyFactory;
+use Shared\Cache\CacheLocker;
 use Illuminate\Support\Facades\Log;
 use Shared\Job\AbstractJob;
 
@@ -34,10 +34,10 @@ class SendTelegramBotMessageJob extends AbstractJob
             $this->telegramSendMessageDto->chatId,
             $this->telegramSendMessageDto->text,
            );
-        if (!$cacheLocker->tryLock($uniqueKey, 300)) {
-            Log::debug('Duplicate SendTelegramBotMessageJob: ' . $uniqueKey);
-            return;
-        }
+//        if (!$cacheLocker->tryLock($uniqueKey, 300)) {
+//            Log::debug('Duplicate SendTelegramBotMessageJob: ' . $uniqueKey);
+//            return;
+//        }
 
        $botApi->sendMessage($this->telegramSendMessageDto);
 

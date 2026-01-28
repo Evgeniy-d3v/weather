@@ -16,14 +16,17 @@ class WeatherApiExecutor implements WeatherApiExecutorInterface
 
     public function getCurrentWeather(string $latitude, string $longitude): WeatherDto
     {
-        $response = $this->httpClient->get('weather?lat='.$latitude.'&lon='.$longitude.'&appid='. config('weather.api_token'));
+        $usl = 'weather?lat='.$latitude.'&lon='.$longitude.'&appid='. config('weather.api_token');
+        $baseUrl = $this->httpClient->getConfig('base_uri');
+        Log::debug('Requesting current weather url: ' . $baseUrl . $usl);
+        $response = $this->httpClient->get($usl);
         $weatherData = json_decode($response->getBody()->getContents(), true);
         Log::debug('Current weather response', $weatherData);
         return $this->responseMapper->mapCurrentWeather($weatherData);
     }
-    public function getFiveDayThreeHourForecast(string $latitude, string $longitude, int $daysCount): WeatherDtoCollection
+    public function getFiveDayThreeHourForecast(string $latitude, string $longitude): WeatherDtoCollection
     {
-        $response = $this->httpClient->get('forecast/?lat='.'44.34'.'&lon='.'10.99'.'&appid='. config('weather.api_token'));
+        $response = $this->httpClient->get('forecast/?lat='.$latitude.'&lon='.$longitude.'&appid='. config('weather.api_token'));
 
         $weatherData = json_decode($response->getBody()->getContents(), true);
 

@@ -4,7 +4,7 @@ namespace App\TelegramBot\Application\Jobs;
 
 use App\TelegramBot\Application\UseCase\ProcessIncomingTelegramUpdate;
 use App\TelegramBot\Presentation\Mappers\TelegramWebHookMapper;
-use Cache\CacheLocker;
+use Shared\Cache\CacheLocker;
 use Illuminate\Support\Facades\Log;
 use Shared\Job\AbstractJob;
 

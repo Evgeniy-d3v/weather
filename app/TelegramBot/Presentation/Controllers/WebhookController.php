@@ -21,9 +21,8 @@ class WebhookController
     public function handle(Request $request): Response
     {
         $payload = $request->all();
-        dispatch(new HandleTelegramWebHookJob($payload));
         Log::debug('Telegram webhook payload: ' . json_encode($request->all()));
-
+        dispatch(new HandleTelegramWebHookJob($payload));
         return response()->noContent(Response::HTTP_OK);
     }
 }

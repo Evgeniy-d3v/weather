@@ -2,7 +2,6 @@
 
 namespace App\Weather\Infrastructure\Adapters;
 
-use DateTimeInterface;
 
 final readonly class WeatherDto
 {
@@ -16,6 +15,7 @@ final readonly class WeatherDto
         public string $weatherCondition, //Дождь, Снег
         public string $weatherDescription, //небольшой дождь, легкий снег
         public string $precipitation, //осадки
+        public ?int $timeZone, //часовой пояс
     )
     {}
 }
