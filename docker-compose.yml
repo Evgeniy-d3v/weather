@@ -27,15 +27,6 @@ services:
       - weather-network
     depends_on:
       - mysql
-    environment:
-      - DB_HOST=mysql
-      - DB_DATABASE=${DB_DATABASE:-weather_bot}
-      - DB_USERNAME=${DB_USERNAME:-laravel}
-      - DB_PASSWORD=${DB_PASSWORD:-laravel}
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - RABBITMQ_USER=${RABBITMQ_USER:-admin}
-      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD:-admin}
 
   # Nginx веб-сервер
   nginx:
@@ -82,7 +73,7 @@ services:
     container_name: weather-redis
     restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
     networks:
       - weather-network
 
@@ -105,7 +96,7 @@ services:
   # Очереди
   queue-handle_telegram_webhook:
     <<: *worker-base
-    container_name: weather-queue
+    container_name: weather-queue-handle-telegram-webhook
     command: >
       php artisan queue:work rabbitmq
       --queue=handle_telegram_webhook
@@ -119,6 +110,13 @@ services:
       --queue=send_telegram_message
       --sleep=3 --tries=5 --timeout=120 --backoff=60 --max-time=3600
 
+  queue-get_city_coordinate:
+    <<: *worker-base
+    container_name: weather-queue-get_city_coordinate
+    command: >
+      php artisan queue:work rabbitmq
+      --queue=get_city_coordinate
+      --sleep=3 --tries=3 --timeout=90 --backoff=30 --max-time=3600
 
 networks:
   weather-network:
