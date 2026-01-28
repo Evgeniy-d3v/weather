@@ -1,7 +1,8 @@
 <?php
 
-namespace App\TelegramBot\Infrastructure\Persistence\Model;
+namespace App\GeoDecoder\Infrastructure\Persistence\Model;
 
+use App\TelegramBot\Infrastructure\Persistence\Model\Client;
 use App\Weather\Infrastructure\Persistence\Model\WeatherForecast;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,7 +13,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  * @property string $city_name
  * @property int $time_zone
- * @property array $coordinates
+ * @property float $latitude
+ * @property float $longitude
  * @property int $city_weather_forecast
  * @property Client[] $clients
  * @property WeatherForecast[] $weatherForecasts
@@ -24,9 +26,11 @@ class City extends Model
     protected $casts = [
         'city_name' => 'string',
         'time_zone' => 'integer',
-        'coordinates' => 'array',
+        'latitude' => 'float',
+        'longitude' => 'float',
         'city_weather_forecast' => 'integer'
     ];
+
     public function clients(): HasMany
     {
         return $this->hasMany(Client::class, 'city_id');

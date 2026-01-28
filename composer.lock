@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cb5b32f11fa4af7a75756245fee2b6f7",
+    "content-hash": "eafe60320dbba7cf45fd3f1b8d13255c",
     "packages": [
         {
             "name": "brick/math",
@@ -6819,6 +6819,68 @@
                 }
             ],
             "time": "2024-11-21T01:49:47+00:00"
+        },
+        {
+            "name": "willdurand/geocoder",
+            "version": "5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/geocoder-php/php-common.git",
+                "reference": "a749e00819d2929bd0ec40fb79853956332970ba"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/geocoder-php/php-common/zipball/a749e00819d2929bd0ec40fb79853956332970ba",
+                "reference": "a749e00819d2929bd0ec40fb79853956332970ba",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2"
+            },
+            "require-dev": {
+                "nyholm/nsa": "^1.1",
+                "phpunit/phpunit": "^9.5",
+                "symfony/stopwatch": "~2.5 || ~5.0"
+            },
+            "suggest": {
+                "symfony/stopwatch": "If you want to use the TimedGeocoder"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Geocoder\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William Durand",
+                    "email": "william.durand1@gmail.com"
+                }
+            ],
+            "description": "Common files for PHP Geocoder",
+            "homepage": "http://geocoder-php.org",
+            "keywords": [
+                "abstraction",
+                "geocoder",
+                "geocoding",
+                "geoip"
+            ],
+            "support": {
+                "source": "https://github.com/geocoder-php/php-common/tree/5.0.0"
+            },
+            "time": "2025-01-01T15:52:42+00:00"
         }
     ],
     "packages-dev": [
