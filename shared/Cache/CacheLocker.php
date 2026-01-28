@@ -1,6 +1,6 @@
 <?php
 
-namespace Cache;
+namespace Shared\Cache;
 use Illuminate\Support\Facades\Cache;
 
 class CacheLocker

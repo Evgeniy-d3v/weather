@@ -1,6 +1,6 @@
 <?php
 
-namespace Cache;
+namespace Shared\Cache;
 
 class CacheKeyFactory
 {
