@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('cities', function (Blueprint $table) {
             $table->id();
             $table->string('city_name');
-            $table->integer('time_zone');
-            $table->json('coordinates');
+            $table->integer('time_zone')->nullable()->default(null);
+            $table->decimal('latitude', 11, 8);
+            $table->decimal('longitude', 11, 8);
             $table->integer('weather_forecast')->nullable();
             $table->timestamps();
         });
