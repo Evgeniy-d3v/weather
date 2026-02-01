@@ -30,9 +30,9 @@ class Client extends Model
         'is_subscribed' => 'boolean',
         'sent_time' => 'array',
     ];
+
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class, 'city_id');
     }
-
 }

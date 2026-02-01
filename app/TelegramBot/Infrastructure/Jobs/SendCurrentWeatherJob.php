@@ -13,8 +13,7 @@ class SendCurrentWeatherJob extends AbstractJob
 {
     public function __construct(
         public int $clientId,
-    )
-    {
+    ) {
         $this->onQueue('send_current_weather');
 
     }
@@ -22,13 +21,13 @@ class SendCurrentWeatherJob extends AbstractJob
     public function handle(
         ClientRepositoryInterface $clientRepository,
         CityRepositoryInterface $cityRepository
-    ): void
-    {
-        Log::debug("SendCurrentWeatherJob");
+    ): void {
+        Log::debug('SendCurrentWeatherJob');
         $client = $clientRepository->getClient($this->clientId);
 
-        if ($client === null || !$client->hasCity()) {
+        if ($client === null || ! $client->hasCity()) {
             Log::warning("Client {$this->clientId} has no city");
+
             return;
         }
 
@@ -38,43 +37,46 @@ class SendCurrentWeatherJob extends AbstractJob
         $rounded = $rounded->minute < 30
             ? $rounded->startOfHour()
             : $rounded->addHour()->startOfHour();
-        //todo отрефакторить
+        // todo отрефакторить
         $cityModel = \App\Location\Infrastructure\Persistence\Model\City::find($city->getId());
         if ($cityModel === null) {
             Log::warning("City {$city->getId()} not found");
+
             return;
         }
 
         $forecastModel = $cityModel->todayForecast()->first();
-        if ($forecastModel === null || !isset($forecastModel->hourly_forecast)) {
+        if ($forecastModel === null || ! isset($forecastModel->hourly_forecast)) {
             Log::warning("No hourly forecast for city {$city->getId()}");
+
             return;
         }
 
         $hourlyForecast = $forecastModel->hourly_forecast;
         $key = $rounded->format('H:00');
 
-        if (!isset($hourlyForecast[$key])) {
+        if (! isset($hourlyForecast[$key])) {
             Log::warning("No forecast data for key {$key}");
+
             return;
         }
 
         $weather = $hourlyForecast[$key];
         $message = mb_convert_encoding(
-                    view(
-                        'weather_report_hourly',
-                        [
-                            'time' => $now,
-                            'city' => $city->getCityName(),
-                            'temperature' => $weather['temperature'],
-                            'temperatureFeelsLike' => $weather['apparent_temperature'],
-                            'weatherCondition' => $weather['weather_condition'],
-                            'precipitation' => $weather['precipitation'],
-                        ]
-                    )->render(),
-                    'UTF-8',
-                    'UTF-8'
-                );
+            view(
+                'weather_report_hourly',
+                [
+                    'time' => $now,
+                    'city' => $city->getCityName(),
+                    'temperature' => $weather['temperature'],
+                    'temperatureFeelsLike' => $weather['apparent_temperature'],
+                    'weatherCondition' => $weather['weather_condition'],
+                    'precipitation' => $weather['precipitation'],
+                ]
+            )->render(),
+            'UTF-8',
+            'UTF-8'
+        );
 
         SendTelegramBotMessageJob::dispatch(
             new TelegramSendMessageDto(
@@ -84,4 +86,3 @@ class SendCurrentWeatherJob extends AbstractJob
         );
     }
 }
-

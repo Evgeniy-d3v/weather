@@ -9,8 +9,8 @@ class TelegramWebHookMapper
 {
     public function mapWebHook(array $payload): TelegramWebHookDto
     {
-        $isQuery  = isset($payload['callback_query']);
-        $message  = $payload['message'] ?? null;
+        $isQuery = isset($payload['callback_query']);
+        $message = $payload['message'] ?? null;
         $callback = $payload['callback_query'] ?? null;
 
         $chatId = $message['chat']['id']
@@ -23,9 +23,9 @@ class TelegramWebHookMapper
 
         $from = $message['from'] ?? $callback['from'] ?? [];
 
-        $firstName = (string)($from['first_name'] ?? '');
-        $lastName  = (string)($from['last_name'] ?? '');
-        $userFullName = trim($firstName . ' ' . $lastName);
+        $firstName = (string) ($from['first_name'] ?? '');
+        $lastName = (string) ($from['last_name'] ?? '');
+        $userFullName = trim($firstName.' '.$lastName);
 
         $username = $from['username'] ?? null;
 
@@ -33,6 +33,7 @@ class TelegramWebHookMapper
             ?? $callback['data']
             ?? null;
         $webAppData = is_array($message) ? ($message['web_app_data']['data'] ?? null) : null;
+
         return new TelegramWebHookDto(
             isQuery: $isQuery,
             chatId: (int) $chatId,

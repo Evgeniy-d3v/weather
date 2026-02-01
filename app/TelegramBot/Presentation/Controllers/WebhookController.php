@@ -9,21 +9,17 @@ use Illuminate\Support\Facades\Log;
 
 class WebhookController
 {
-    public function __construct() {
-    }
+    public function __construct() {}
 
     /**
      * Обработка входящего вебхука от Telegram
-     *
-     * @param Request $request
-     * @return Response
      */
     public function handle(Request $request): Response
     {
         $payload = $request->all();
-        Log::debug('Telegram webhook payload: ' . json_encode($request->all()));
+        Log::debug('Telegram webhook payload: '.json_encode($request->all()));
         dispatch(new HandleTelegramWebHookJob($payload));
+
         return response()->noContent(Response::HTTP_OK);
     }
 }
-

@@ -10,12 +10,12 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ClientRepository implements ClientRepositoryInterface
 {
-
     public function findByChatId(int $chatId): ?ClientEntity
     {
-        $client =  Client::query()
+        $client = Client::query()
             ->where('chat_id', $chatId)
             ->first();
+
         return $this->toDomainEntity($client);
     }
 
@@ -68,8 +68,10 @@ class ClientRepository implements ClientRepositoryInterface
         $model = Client::query()
             ->where('id', $id)
             ->first();
+
         return $this->toDomainEntity($model);
     }
+
     public function saveSubscribe(int $clientId): void
     {
         $entity = $this->getClient($clientId);
@@ -79,6 +81,7 @@ class ClientRepository implements ClientRepositoryInterface
         $entity->subscribe();
         $this->save($entity);
     }
+
     public function deleteCity(int $clientId): void
     {
         $entity = $this->getClient($clientId);
@@ -98,9 +101,10 @@ class ClientRepository implements ClientRepositoryInterface
 
     private function toDomainEntity(?Client $model): ?ClientEntity
     {
-        if ($model === null){
+        if ($model === null) {
             return null;
         }
+
         return new ClientEntity(
             id: $model->id,
             chatId: $model->chat_id,
@@ -111,6 +115,7 @@ class ClientRepository implements ClientRepositoryInterface
             sentTime: $model->sent_time,
         );
     }
+
     private function toModel(ClientEntity $entity): Client
     {
         $model = Client::findOrNew($entity->getId());

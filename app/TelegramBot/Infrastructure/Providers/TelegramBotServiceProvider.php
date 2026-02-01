@@ -24,14 +24,13 @@ class TelegramBotServiceProvider extends ServiceProvider
         $this->app->bind(ClientRepositoryInterface::class, ClientRepository::class);
     }
 
-
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
                 AddWebHookCommand::class,
                 DeleteWebHookCommand::class,
-                SendDailySubscribeForecastToClients::class
+                SendDailySubscribeForecastToClients::class,
             ]);
         }
     }

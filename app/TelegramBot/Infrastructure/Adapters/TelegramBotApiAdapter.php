@@ -11,8 +11,7 @@ class TelegramBotApiAdapter implements TelegramBotApiInterface
 {
     public function __construct(
         public Api $apiBot
-    )
-    {}
+    ) {}
 
     public function sendMessage(TelegramSendMessageDto $dto): void
     {
@@ -28,7 +27,7 @@ class TelegramBotApiAdapter implements TelegramBotApiInterface
      */
     public function setWebhook(string $url): bool
     {
-        return $this->apiBot->setWebhook(['url'=> $url]);
+        return $this->apiBot->setWebhook(['url' => $url]);
     }
 
     /**

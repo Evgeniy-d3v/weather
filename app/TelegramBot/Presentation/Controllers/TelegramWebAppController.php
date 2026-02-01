@@ -1,6 +1,7 @@
 <?php
 
 namespace App\TelegramBot\Presentation\Controllers;
+
 use Illuminate\View\View;
 
 class TelegramWebAppController

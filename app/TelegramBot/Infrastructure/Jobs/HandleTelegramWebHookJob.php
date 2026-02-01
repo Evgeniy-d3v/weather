@@ -10,11 +10,9 @@ use Shared\Job\AbstractJob;
 
 class HandleTelegramWebHookJob extends AbstractJob
 {
-
     public function __construct(
-       public array $payload,
-    )
-    {
+        public array $payload,
+    ) {
         $this->onQueue('handle_telegram_webhook');
 
     }
@@ -26,11 +24,11 @@ class HandleTelegramWebHookJob extends AbstractJob
         ProcessIncomingTelegramUpdate $processIncomingTelegramUpdate,
         TelegramWebHookMapper $hookMapper,
         CacheLocker $cacheLocker,
-    ): void
-    {
-        //todo (переписать лок отрпавки)
-        if (!$cacheLocker->tryLock($this->payload['update_id'], 360)) {
-            Log::debug('Duplicate Telegram webhook received with update_id: ' . $this->payload['update_id']);
+    ): void {
+        // todo (переписать лок отрпавки)
+        if (! $cacheLocker->tryLock($this->payload['update_id'], 360)) {
+            Log::debug('Duplicate Telegram webhook received with update_id: '.$this->payload['update_id']);
+
             return;
         }
 

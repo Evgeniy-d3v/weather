@@ -12,6 +12,7 @@ class AddWebHookCommand extends Command
     ) {
         parent::__construct();
     }
+
     /**
      * The name and signature of the console command.
      *
@@ -33,8 +34,9 @@ class AddWebHookCommand extends Command
     {
         $url = $this->argument('url') ?? config('telegram.webhook_url');
 
-        if (!$url) {
+        if (! $url) {
             $this->error('URL вебхука не указан. Укажите его как аргумент или в конфиге telegram.webhook_url');
+
             return self::FAILURE;
         }
 
@@ -43,13 +45,16 @@ class AddWebHookCommand extends Command
 
             if ($result) {
                 $this->info("Вебхук успешно установлен: {$url}");
+
                 return self::SUCCESS;
             } else {
                 $this->error('Не удалось установить вебхук');
+
                 return self::FAILURE;
             }
         } catch (\Exception $e) {
-            $this->error('Ошибка при установке вебхука: ' . $e->getMessage());
+            $this->error('Ошибка при установке вебхука: '.$e->getMessage());
+
             return self::FAILURE;
         }
     }

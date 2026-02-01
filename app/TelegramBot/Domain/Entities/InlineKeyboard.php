@@ -21,10 +21,10 @@ final class InlineKeyboard
         return json_encode([
             'inline_keyboard' => [
                 [
-                    ['text' => 'Получить текущую погоду', 'callback_data' => 'get_current_weather']
+                    ['text' => 'Получить текущую погоду', 'callback_data' => 'get_current_weather'],
                 ],
                 [
-                    ['text' => 'Изменить город', 'callback_data' => 'change_city']
+                    ['text' => 'Изменить город', 'callback_data' => 'change_city'],
                 ],
                 [
                     ['text' => 'Изменить настройки рассылки', 'callback_data' => 'change_days'],

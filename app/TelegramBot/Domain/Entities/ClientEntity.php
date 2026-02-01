@@ -12,8 +12,7 @@ final class ClientEntity
         private bool $isSubscribed,
         private ?int $cityId,
         private ?array $sentTime,
-    ) {
-    }
+    ) {}
 
     public function getId(): int
     {

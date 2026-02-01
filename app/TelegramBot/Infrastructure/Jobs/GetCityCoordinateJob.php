@@ -16,8 +16,7 @@ class GetCityCoordinateJob extends AbstractJob
         public string $cityName,
         public int $clientId,
         public int $chatId,
-    )
-    {
+    ) {
         $this->onQueue('get_city_coordinate');
 
     }
@@ -28,22 +27,21 @@ class GetCityCoordinateJob extends AbstractJob
     public function handle(
         CityHandler $cityHandler,
         CacheLocker $cacheLocker,
-    ): void
-    {
-        //todo (переписать лок отрпавки)
-//        if (!$cacheLocker->tryLock($this->payload['update_id'], 360)) {
-//            Log::debug('Duplicate Telegram webhook received with update_id: ' . $this->payload['update_id']);
-//            return;
-//        }
+    ): void {
+        // todo (переписать лок отрпавки)
+        //        if (!$cacheLocker->tryLock($this->payload['update_id'], 360)) {
+        //            Log::debug('Duplicate Telegram webhook received with update_id: ' . $this->payload['update_id']);
+        //            return;
+        //        }
         try {
             $cityHandler->createCity($this->cityName, $this->clientId);
             SendTelegramBotMessageJob::dispatch(new TelegramSendMessageDto(
                 chatId: $this->chatId,
                 text: MessageTextEnum::CITY_FOUND->value,
-                replyMarkup:InlineKeyboard::subscribeWeatherNewsLetterConfig()
+                replyMarkup: InlineKeyboard::subscribeWeatherNewsLetterConfig()
             ));
         } catch (\Exception $e) {
-            Log::debug('GetCityCoordinateJob exception: ' . $e->getMessage());
+            Log::debug('GetCityCoordinateJob exception: '.$e->getMessage());
             SendTelegramBotMessageJob::dispatch(new TelegramSendMessageDto(
                 chatId: $this->chatId,
                 text: MessageTextEnum::GET_CITY_INFO_EXCEPTION->value,
