@@ -1,0 +1,11 @@
+{
+    "pre-commit": {
+        "enabled": true,
+        "actions": [
+            {
+                "action": "make",
+                "args": ["pint"]
+            }
+        ]
+    }
+}

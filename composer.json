@@ -16,6 +16,7 @@
         "willdurand/geocoder": "^5.0"
     },
     "require-dev": {
+        "captainhook/captainhook": "^5.27",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.27",

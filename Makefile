@@ -11,3 +11,5 @@ reloadQueue:
         	queue-send_forecast_report\
         	queue-send_current_weather\
 
+pint:
+	docker compose exec -T php vendor/bin/pint app/
