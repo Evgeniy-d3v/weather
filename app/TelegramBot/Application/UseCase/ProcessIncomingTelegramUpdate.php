@@ -4,12 +4,13 @@ namespace App\TelegramBot\Application\UseCase;
 
 use App\TelegramBot\Application\DTO\TelegramSendMessageDto;
 use App\TelegramBot\Application\DTO\TelegramWebHookDto;
-use App\TelegramBot\Application\Jobs\GetCityCoordinateJob;
-use App\TelegramBot\Application\Jobs\SendCurrentWeatherJob;
-use App\TelegramBot\Application\Jobs\SendTelegramBotMessageJob;
 use App\TelegramBot\Application\Repositories\ClientRepositoryInterface;
+use App\TelegramBot\Domain\Entities\ClientEntity;
 use App\TelegramBot\Domain\Entities\InlineKeyboard;
 use App\TelegramBot\Domain\Entities\MessageTextEnum;
+use App\TelegramBot\Infrastructure\Jobs\GetCityCoordinateJob;
+use App\TelegramBot\Infrastructure\Jobs\SendCurrentWeatherJob;
+use App\TelegramBot\Infrastructure\Jobs\SendTelegramBotMessageJob;
 use Illuminate\Support\Facades\Log;
 
 
@@ -32,6 +33,8 @@ final class ProcessIncomingTelegramUpdate
             );
             return;
         }
+
+        /** @var ClientEntity $client */
         $client = $this->clientRepository->findByChatId($dto->chatId);
 
         if ($client === null) {
@@ -43,11 +46,10 @@ final class ProcessIncomingTelegramUpdate
             return;
         }
 
-        if (!$client->is_subscribed) {
+        if (!$client->isSubscribed()) {
             switch ($dto->text) {
                 case 'subscribe':
-                    $client->is_subscribed = true;
-                    $client->save();
+                    $this->clientRepository->saveSubscribe($client->getId());
                     $this->sendMessageToClient(
                         $dto->chatId,
                         MessageTextEnum::SUBSCRIBE_MESSAGE->value
@@ -68,8 +70,8 @@ final class ProcessIncomingTelegramUpdate
                     break;
             }
         } else {
-           if ($client->city === null) {
-               GetCityCoordinateJob::dispatch($dto->text, $client->id, $dto->chatId);
+           if (!$client->hasCity()) {
+               GetCityCoordinateJob::dispatch($dto->text, $client->getId(), $dto->chatId);
                $this->sendMessageToClient(
                    $dto->chatId,
                    MessageTextEnum::FIND_COORDINATE_MESSAGE->value
@@ -77,8 +79,7 @@ final class ProcessIncomingTelegramUpdate
            } else {
                //"isQuery":true
                if ($dto->text === 'change_city') {
-                   $client->city = null;
-                   $client->save();
+                   $this->clientRepository->deleteCity($client->getId());
                    $this->sendMessageToClient(
                        $dto->chatId,
                        MessageTextEnum::CHANGE_CITY_MESSAGE->value
@@ -86,20 +87,17 @@ final class ProcessIncomingTelegramUpdate
                    return;
                }
                if ($dto->text === 'unsubscribe') {
-                   $client->is_subscribed = false;
-                   $client->save();
                    $this->sendMessageToClient(
                        $dto->chatId,
                        MessageTextEnum::UNSUBSCRIBE_MESSAGE->value
                    );
+
+                   $this->clientRepository->deleteClient($client->getId());
                    return;
                }
                if ($dto->text === 'get_current_weather') {
-                   $this->sendMessageToClient(
-                       $dto->chatId,
-                      'current weather sending is under development'
-                   );
-//                   SendCurrentWeatherJob::dispatch($client->id, $dto->chatId);
+                   Log::debug('get_current_weather');
+                   SendCurrentWeatherJob::dispatch($client->getId());
                    return;
                }
                if ($dto->text === 'change_days') {

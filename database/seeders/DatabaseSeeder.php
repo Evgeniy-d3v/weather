@@ -15,10 +15,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Client::factory(10)->create();
+        // ClientEntity::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test Client',
+            'name' => 'Test ClientEntity',
             'email' => 'test@example.com',
         ]);
     }

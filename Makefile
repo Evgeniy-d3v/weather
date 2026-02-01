@@ -1,5 +1,13 @@
 php:
 	docker compose exec php bash
 reloadQueue:
-	docker compose exec php php artisan optimize:clear && docker restart weather-queue-handle-telegram-webhook weather-queue-send-telegram weather-queue-get_city_coordinate
+	docker compose exec php php artisan optimize:clear && \
+		docker compose up -d --force-recreate \
+        	queue-handle_telegram_webhook \
+        	queue-send-telegram \
+        	queue-get_city_coordinate \
+        	queue-daily_forecast \
+        	queue-hourly_forecast \
+        	queue-send_forecast_report\
+        	queue-send_current_weather\
 

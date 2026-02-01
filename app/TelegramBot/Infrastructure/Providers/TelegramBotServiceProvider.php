@@ -8,6 +8,7 @@ use App\TelegramBot\Infrastructure\Adapters\TelegramBotApiAdapter;
 use App\TelegramBot\Infrastructure\Persistence\Repositories\ClientRepository;
 use App\TelegramBot\Presentation\Commands\AddWebHookCommand;
 use App\TelegramBot\Presentation\Commands\DeleteWebHookCommand;
+use App\TelegramBot\Presentation\Commands\SendDailySubscribeForecastToClients;
 use Illuminate\Support\ServiceProvider;
 use Telegram\Bot\Api;
 
@@ -29,7 +30,8 @@ class TelegramBotServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 AddWebHookCommand::class,
-                DeleteWebHookCommand::class
+                DeleteWebHookCommand::class,
+                SendDailySubscribeForecastToClients::class
             ]);
         }
     }

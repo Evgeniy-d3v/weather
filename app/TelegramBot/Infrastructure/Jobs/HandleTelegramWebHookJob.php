@@ -1,11 +1,11 @@
 <?php
 
-namespace App\TelegramBot\Application\Jobs;
+namespace App\TelegramBot\Infrastructure\Jobs;
 
 use App\TelegramBot\Application\UseCase\ProcessIncomingTelegramUpdate;
 use App\TelegramBot\Presentation\Mappers\TelegramWebHookMapper;
-use Shared\Cache\CacheLocker;
 use Illuminate\Support\Facades\Log;
+use Shared\Cache\CacheLocker;
 use Shared\Job\AbstractJob;
 
 class HandleTelegramWebHookJob extends AbstractJob

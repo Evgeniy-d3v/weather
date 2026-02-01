@@ -1,13 +1,13 @@
 <?php
 
-namespace App\TelegramBot\Application\Jobs;
+namespace App\TelegramBot\Infrastructure\Jobs;
 
 use App\TelegramBot\Application\DTO\TelegramSendMessageDto;
 use App\TelegramBot\Application\TelegramBotApiInterface;
 use App\TelegramBot\Domain\Entities\CachePrefixEnum;
+use Illuminate\Support\Facades\Log;
 use Shared\Cache\CacheKeyFactory;
 use Shared\Cache\CacheLocker;
-use Illuminate\Support\Facades\Log;
 use Shared\Job\AbstractJob;
 
 class SendTelegramBotMessageJob extends AbstractJob
@@ -28,6 +28,7 @@ class SendTelegramBotMessageJob extends AbstractJob
         CacheKeyFactory $cacheKeyFactory,
     ): void
     {
+        Log::debug("SendTelegramBotMessageJob");
         //todo (Мб стоит подумать на тем, что пользователь будет жать на кнопку отправки несколько раз и тогда сообщение не отправится)
         $uniqueKey = $cacheKeyFactory->generateUniqKey(
             CachePrefixEnum::SEND_MESSAGE->value,

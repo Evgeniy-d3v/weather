@@ -2,7 +2,7 @@
 
 namespace App\TelegramBot\Presentation\Controllers;
 
-use App\TelegramBot\Application\Jobs\HandleTelegramWebHookJob;
+use App\TelegramBot\Infrastructure\Jobs\HandleTelegramWebHookJob;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;

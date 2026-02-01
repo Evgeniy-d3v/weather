@@ -118,6 +118,37 @@ services:
       --queue=get_city_coordinate
       --sleep=3 --tries=3 --timeout=90 --backoff=30 --max-time=3600
 
+  queue-daily_forecast:
+    <<: *worker-base
+    container_name: weather-queue-daily_forecast
+    command: >
+      php artisan queue:work rabbitmq
+      --queue=daily_forecast
+      --sleep=3 --tries=3 --timeout=90 --backoff=30 --max-time=3600
+
+  queue-hourly_forecast:
+    <<: *worker-base
+    container_name: weather-queue-hourly_forecast
+    command: >
+      php artisan queue:work rabbitmq
+      --queue=hourly_forecast
+      --sleep=3 --tries=3 --timeout=90 --backoff=30 --max-time=3600
+
+  queue-send_forecast_report:
+    <<: *worker-base
+    container_name: weather-queue-send_forecast_report
+    command: >
+      php artisan queue:work rabbitmq
+      --queue=send_forecast_report
+      --sleep=3 --tries=3 --timeout=90 --backoff=30 --max-time=3600
+
+  queue-send_current_weather:
+    <<: *worker-base
+    container_name: weather-queue-send_current_weather
+    command: >
+      php artisan queue:work rabbitmq
+      --queue=send_current_weather
+      --sleep=3 --tries=3 --timeout=90 --backoff=30 --max-time=3600
 networks:
   weather-network:
     driver: bridge
