@@ -15,15 +15,9 @@ return new class extends Migration
         Schema::create('weather_forecasts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('city_id');
-            $table->string('forecast_time');
-            $table->integer('temperature');
-            $table->integer('feels_like');
-            $table->string('wind_direction');
-            $table->integer('wind_speed');
-            $table->string('cloud_cover');
-            $table->string('weather_condition');
-            $table->string('weather_description');
-            $table->string('precipitation');
+            $table->date('day');
+            $table->json('daily_forecast')->nullable();
+            $table->json('hourly_forecast')->nullable();
             $table->timestamps();
         });
     }

@@ -1,0 +1,62 @@
+<?php
+
+namespace App\Location\Presentation\Commands;
+
+
+use App\Location\Application\Repositories\CityRepositoryInterface;
+use App\Location\Infrastructure\Job\GetAndSetDailyForecastJob;
+use App\Location\Infrastructure\Job\GetAndSetHourlyForecastJob;
+use Carbon\Carbon;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+
+class GetWeatherForecast extends Command
+{
+    public function __construct(
+        public CityRepositoryInterface $cityRepository,
+    ) {
+        parent::__construct();
+    }
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'get-weather-forecast';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Получить дневной и почасовой прогнозы погоды';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle(): void
+    {
+        Log::debug('GetWeatherForecast start: ');
+        $cities = $this->cityRepository->getAllCitiesWithLastForecast();
+        foreach ($cities as $city){
+            if (!$this->checkIsNewDay($city->time_zone, $city->latestWeatherForecast->day)) {
+                continue;
+            }
+            GetAndSetDailyForecastJob::dispatch($city->id);
+            Log::debug('GetWeatherForecast start: dispatch GetAndSetDailyForecastJob');
+            GetAndSetHourlyForecastJob::dispatch($city->id);
+            Log::debug('GetWeatherForecast start: dispatch GetAndSetHourlyForecastJob');
+
+        }
+    }
+    private function checkIsNewDay(string $cityTz, string $cityDay): bool
+    {
+        $now = Carbon::now($cityTz)->toDateString();
+
+        if ($cityDay === $now)
+        {
+            return false;
+        }
+        return true;
+    }
+}

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreign('city_id')
                 ->references('id')
                 ->on('cities')
-                ->cascadeOnDelete(); // удалили город -> удалили все прогнозы
+                ->cascadeOnDelete();
         });
     }
 
