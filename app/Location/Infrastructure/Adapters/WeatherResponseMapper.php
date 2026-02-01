@@ -2,7 +2,6 @@
 
 namespace App\Location\Infrastructure\Adapters;
 
-
 use App\Location\Application\DTO\WeatherDailyDto;
 use App\Location\Application\DTO\WeatherHourlyDto;
 use App\Location\Application\DTO\WeatherHourlyDtoCollection;
@@ -10,17 +9,18 @@ use App\Location\Application\DTO\WeatherHourlyDtoCollection;
 class WeatherResponseMapper
 {
     /**
-     * @param array<int, string> $weatherConditionCodeMap
+     * @param  array<int, string>  $weatherConditionCodeMap
      */
     public function __construct(
-       private readonly array $weatherConditionCodeMap
-    ) {
-    }
+        private readonly array $weatherConditionCodeMap
+    ) {}
+
     public function mapDailyForecast(array $weatherData): WeatherDailyDto
     {
         $dailyParameters = $weatherData['daily'];
+
         return new WeatherDailyDto(
-            timeZone:$this->normalizeTimeZone($weatherData['timezone_abbreviation']),
+            timeZone: $this->normalizeTimeZone($weatherData['timezone_abbreviation']),
             date: $dailyParameters['time'][0],
             temperatureMin: $dailyParameters['temperature_2m_min'][0],
             temperatureMax: $dailyParameters['temperature_2m_max'][0],
@@ -31,6 +31,7 @@ class WeatherResponseMapper
             weatherCondition: $this->weatherConditionCodeToText($dailyParameters['weathercode'][0]),
         );
     }
+
     public function mapHourlyForecast(array $weatherData): WeatherHourlyDtoCollection
     {
         $hourly = $weatherData['hourly'];
@@ -59,15 +60,16 @@ class WeatherResponseMapper
         return $weatherHourlyDtoCollection;
     }
 
-
     private function weatherConditionCodeToText(int $code): string
     {
         return $this->weatherConditionCodeMap[$code] ?? 'неизвестно';
     }
+
     private function normalizeTimeZone(string $timeZone): string
     {
         $pattern = '/[+-]\d{1,2}/';
         preg_match($pattern, $timeZone, $matches);
+
         return $matches[0] ?? $timeZone; // Fallback на исходное значение, если не найдено
     }
 }

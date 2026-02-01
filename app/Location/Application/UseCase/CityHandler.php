@@ -15,9 +15,7 @@ class CityHandler
         public WeatherApiExecutorInterface $weatherApiExecutor,
         public CityRepositoryInterface $cityRepository,
         public ClientRepositoryInterface $clientRepository,
-    )
-    {
-    }
+    ) {}
 
     public function createCity(string $cityName, int $clientId): void
     {
@@ -29,8 +27,9 @@ class CityHandler
 
     private function getCityInfo(string $cityName): CityInfoDto
     {
-        $coordinateDto =  $this->geoDecoderApiExecutor->getCoordinate($cityName);
-        $timeZone =  $this->weatherApiExecutor->getDailyWeather($coordinateDto->latitude, $coordinateDto->longitude)->timeZone;
+        $coordinateDto = $this->geoDecoderApiExecutor->getCoordinate($cityName);
+        $timeZone = $this->weatherApiExecutor->getDailyWeather($coordinateDto->latitude, $coordinateDto->longitude)->timeZone;
+
         return new CityInfoDto(
             cityName: $cityName,
             timeZone: $timeZone,

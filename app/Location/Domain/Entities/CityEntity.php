@@ -2,7 +2,6 @@
 
 namespace App\Location\Domain\Entities;
 
-
 final class CityEntity
 {
     public function __construct(
@@ -11,8 +10,7 @@ final class CityEntity
         private string $timeZone,
         private float $latitude,
         private float $longitude,
-    ) {
-    }
+    ) {}
 
     public function getId(): int
     {
@@ -38,5 +36,4 @@ final class CityEntity
     {
         return $this->longitude;
     }
-
 }

@@ -9,6 +9,5 @@ final class CityInfoDto
         public readonly string $timeZone,
         public readonly float $latitude,
         public readonly float $longitude,
-    ) {
-    }
+    ) {}
 }

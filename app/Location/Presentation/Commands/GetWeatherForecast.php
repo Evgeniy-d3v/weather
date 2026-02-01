@@ -2,7 +2,6 @@
 
 namespace App\Location\Presentation\Commands;
 
-
 use App\Location\Application\Repositories\CityRepositoryInterface;
 use App\Location\Infrastructure\Job\GetAndSetDailyForecastJob;
 use App\Location\Infrastructure\Job\GetAndSetHourlyForecastJob;
@@ -17,6 +16,7 @@ class GetWeatherForecast extends Command
     ) {
         parent::__construct();
     }
+
     /**
      * The name and signature of the console command.
      *
@@ -38,8 +38,8 @@ class GetWeatherForecast extends Command
     {
         Log::debug('GetWeatherForecast start: ');
         $cities = $this->cityRepository->getAllCitiesWithLastForecast();
-        foreach ($cities as $city){
-            if (!$this->checkIsNewDay($city->time_zone, $city->latestWeatherForecast->day)) {
+        foreach ($cities as $city) {
+            if (! $this->checkIsNewDay($city->time_zone, $city->latestWeatherForecast->day)) {
                 continue;
             }
             GetAndSetDailyForecastJob::dispatch($city->id);
@@ -49,14 +49,15 @@ class GetWeatherForecast extends Command
 
         }
     }
+
     private function checkIsNewDay(string $cityTz, string $cityDay): bool
     {
         $now = Carbon::now($cityTz)->toDateString();
 
-        if ($cityDay === $now)
-        {
+        if ($cityDay === $now) {
             return false;
         }
+
         return true;
     }
 }

@@ -19,7 +19,7 @@ class CityRepository implements CityRepositoryInterface
             latitude: $dto->latitude,
             longitude: $dto->longitude,
         );
-        
+
         $model = $this->toModel($entity);
         $model->save();
 
@@ -34,6 +34,7 @@ class CityRepository implements CityRepositoryInterface
     public function getCityById(int $cityId): CityEntity
     {
         $model = City::where('id', $cityId)->firstOrFail();
+
         return $this->toDomainEntity($model);
     }
 

@@ -35,6 +35,7 @@ class City extends Model
     {
         return $this->hasMany(Client::class, 'city_id');
     }
+
     public function weatherForecasts(): HasMany
     {
         return $this->hasMany(WeatherForecast::class, 'city_id', 'id');

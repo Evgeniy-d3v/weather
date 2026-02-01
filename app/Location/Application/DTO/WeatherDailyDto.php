@@ -7,15 +7,14 @@ final readonly class WeatherDailyDto
     public function __construct(
         public string $timeZone,
         public string $date,
-        public float  $temperatureMin,
-        public float  $temperatureMax,
-        public float  $apparentTemperatureMin,
-        public float  $apparentTemperatureMax,
-        public float  $precipitationSum,
-        public float  $windSpeedMax,
+        public float $temperatureMin,
+        public float $temperatureMax,
+        public float $apparentTemperatureMin,
+        public float $apparentTemperatureMax,
+        public float $precipitationSum,
+        public float $windSpeedMax,
         public string $weatherCondition,
-    )
-    {}
+    ) {}
 
     public function toStorageArray(): array
     {
@@ -30,4 +29,3 @@ final readonly class WeatherDailyDto
         ];
     }
 }
-

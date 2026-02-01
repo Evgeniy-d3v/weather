@@ -7,7 +7,7 @@ use Countable;
 use IteratorAggregate;
 use JsonSerializable;
 
-final class WeatherHourlyDtoCollection implements IteratorAggregate, Countable, JsonSerializable
+final class WeatherHourlyDtoCollection implements Countable, IteratorAggregate, JsonSerializable
 {
     /**
      * @var WeatherHourlyDto[]
@@ -15,9 +15,9 @@ final class WeatherHourlyDtoCollection implements IteratorAggregate, Countable, 
     private array $items = [];
 
     private string $date;
+
     /**
-     * @param string $date
-     * @param WeatherHourlyDto[] $items
+     * @param  WeatherHourlyDto[]  $items
      */
     public function __construct(string $date, array $items = [])
     {
@@ -36,6 +36,7 @@ final class WeatherHourlyDtoCollection implements IteratorAggregate, Countable, 
     {
         return $this->date;
     }
+
     /**
      * @return WeatherHourlyDto[]
      */

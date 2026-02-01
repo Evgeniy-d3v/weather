@@ -6,12 +6,12 @@ final readonly class WeatherHourlyDto
 {
     public function __construct(
         public string $time,
-        public float  $temperature,
-        public float  $apparentTemperature,
+        public float $temperature,
+        public float $apparentTemperature,
         public string $precipitation,
         public string $weatherCondition,
-    )
-    {}
+    ) {}
+
     public function toStorageArray(): array
     {
         return [

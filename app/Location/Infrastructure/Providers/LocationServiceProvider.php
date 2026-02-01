@@ -20,7 +20,7 @@ class LocationServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->bind(GeoDecoderApiExecutorInterface::class, function($app) {
+        $this->app->bind(GeoDecoderApiExecutorInterface::class, function ($app) {
             $httpClient = new Client([
                 'base_uri' => config('location.base_geo_decoding_api_url'),
                 'timeout' => 20,
@@ -32,7 +32,7 @@ class LocationServiceProvider extends ServiceProvider
                 $app->make(GeoDecoderResponseMapper::class),
             );
         });
-        $this->app->bind(WeatherApiExecutorInterface::class, function($app) {
+        $this->app->bind(WeatherApiExecutorInterface::class, function ($app) {
             $httpClient = new Client([
                 'base_uri' => config('location.base_meteo_api_url'),
                 'timeout' => 20,
@@ -44,17 +44,18 @@ class LocationServiceProvider extends ServiceProvider
                 $app->make(WeatherResponseMapper::class),
             );
         });
-        $this->app->bind(CityRepositoryInterface::class, function($app) {
-            return new CityRepository();
+        $this->app->bind(CityRepositoryInterface::class, function ($app) {
+            return new CityRepository;
         });
         $this->app->bind(WeatherForecastRepositoryInterface::class, function ($app) {
-            return new WeatherForecastRepository();
+            return new WeatherForecastRepository;
         });
 
-        $this->app->bind(WeatherResponseMapper::class, function($app) {
+        $this->app->bind(WeatherResponseMapper::class, function ($app) {
             return new WeatherResponseMapper(config('location.weather_condition_code_map'));
         });
     }
+
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
@@ -64,4 +65,3 @@ class LocationServiceProvider extends ServiceProvider
         }
     }
 }
-

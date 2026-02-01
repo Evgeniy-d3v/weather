@@ -11,11 +11,11 @@ class GeoDecoderApiAdapter implements GeoDecoderApiExecutorInterface
     public function __construct(
         public Client $httpClient,
         public GeoDecoderResponseMapper $responseMapper,
-    )
-    {}
+    ) {}
+
     public function getCoordinate(string $cityName): CityCoordinateDto
     {
-        $response = $this->httpClient->get('search?q=' . $cityName . '&api_key='. config('location.api_token'));
+        $response = $this->httpClient->get('search?q='.$cityName.'&api_key='.config('location.api_token'));
 
         $geoDecodeData = json_decode($response->getBody()->getContents(), true);
 

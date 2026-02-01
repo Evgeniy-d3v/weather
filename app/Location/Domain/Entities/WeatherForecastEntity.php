@@ -10,8 +10,7 @@ final class WeatherForecastEntity
         private string $day, // Y-m-d format
         private ?array $dailyForecast,
         private ?array $hourlyForecast,
-    ) {
-    }
+    ) {}
 
     // Геттеры
     public function getId(): int
@@ -52,11 +51,11 @@ final class WeatherForecastEntity
 
     public function hasDailyForecast(): bool
     {
-        return $this->dailyForecast !== null && !empty($this->dailyForecast);
+        return $this->dailyForecast !== null && ! empty($this->dailyForecast);
     }
 
     public function hasHourlyForecast(): bool
     {
-        return $this->hourlyForecast !== null && !empty($this->hourlyForecast);
+        return $this->hourlyForecast !== null && ! empty($this->hourlyForecast);
     }
 }

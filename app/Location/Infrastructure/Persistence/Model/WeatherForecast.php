@@ -26,6 +26,7 @@ class WeatherForecast extends Model
         'daily_forecast',
         'hourly_forecast',
     ];
+
     protected $casts = [
         'city_id' => 'integer',
         'day' => 'date:Y-m-d',
@@ -37,5 +38,4 @@ class WeatherForecast extends Model
     {
         return $this->belongsTo(City::class, 'city_id', 'id');
     }
-
 }

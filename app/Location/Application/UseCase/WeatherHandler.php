@@ -12,8 +12,8 @@ class WeatherHandler
         public CityRepositoryInterface $cityRepository,
         public WeatherApiExecutorInterface $weatherApiExecutor,
         public WeatherForecastRepositoryInterface $weatherForecastRepository,
-    )
-    {}
+    ) {}
+
     public function getAndSetDailyForecast(int $cityId): void
     {
         $city = $this->cityRepository->getCityById($cityId);
