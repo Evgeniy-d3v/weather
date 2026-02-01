@@ -12,4 +12,5 @@ reloadQueue:
         	queue-send_current_weather\
 
 pint:
-	docker compose exec -T php vendor/bin/pint app/
+	@echo "Running Pint (app/)..."
+	docker compose exec -T php vendor/bin/pint --config pint.json app/
