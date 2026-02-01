@@ -30,6 +30,7 @@ class SendForecastWhenReadyJob extends AbstractJob
 
         $city = $cityRepository->getCityById($client->getCityId());
 
+        //todo отрефакторить
         // Получаем прогноз из БД через модель (так как нужны связи)
         $cityModel = \App\Location\Infrastructure\Persistence\Model\City::find($city->getId());
         if ($cityModel === null) {

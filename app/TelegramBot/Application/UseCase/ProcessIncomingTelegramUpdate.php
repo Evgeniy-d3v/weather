@@ -41,7 +41,8 @@ final class ProcessIncomingTelegramUpdate
             $this->sendMessageToClient(
                 $dto->chatId,
                 MessageTextEnum::FIRST_MESSAGE->value,
-                InlineKeyboard::subscriptionMenu());
+                InlineKeyboard::subscriptionMenu()
+            );
 
             return;
         }
