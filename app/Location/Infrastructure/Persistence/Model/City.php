@@ -2,6 +2,7 @@
 
 namespace App\Location\Infrastructure\Persistence\Model;
 
+use App\Location\Infrastructure\Persistence\Event\CityCreatedEvent;
 use App\TelegramBot\Infrastructure\Persistence\Model\Client;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +25,9 @@ class City extends Model
 {
     protected $table = 'cities';
 
+    protected $dispatchesEvents = [
+        'created' => CityCreatedEvent::class,
+    ];
     protected $casts = [
         'city_name' => 'string',
         'time_zone' => 'string',
