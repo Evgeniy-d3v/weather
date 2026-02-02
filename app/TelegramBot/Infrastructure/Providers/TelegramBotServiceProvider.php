@@ -2,8 +2,10 @@
 
 namespace App\TelegramBot\Infrastructure\Providers;
 
+use App\TelegramBot\Application\JobDispatcherInterface;
 use App\TelegramBot\Application\Repositories\ClientRepositoryInterface;
 use App\TelegramBot\Application\TelegramBotApiInterface;
+use App\TelegramBot\Infrastructure\Adapters\JobDispatcher;
 use App\TelegramBot\Infrastructure\Adapters\TelegramBotApiAdapter;
 use App\TelegramBot\Infrastructure\Persistence\Repositories\ClientRepository;
 use App\TelegramBot\Presentation\Commands\AddWebHookCommand;
@@ -22,6 +24,7 @@ class TelegramBotServiceProvider extends ServiceProvider
 
         $this->app->bind(TelegramBotApiInterface::class, TelegramBotApiAdapter::class);
         $this->app->bind(ClientRepositoryInterface::class, ClientRepository::class);
+        $this->app->bind(JobDispatcherInterface::class, JobDispatcher::class);
     }
 
     public function boot(): void
