@@ -10,14 +10,11 @@ use App\Location\Infrastructure\Adapters\GeoDecoderApiAdapter;
 use App\Location\Infrastructure\Adapters\GeoDecoderResponseMapper;
 use App\Location\Infrastructure\Adapters\WeatherApiExecutor;
 use App\Location\Infrastructure\Adapters\WeatherResponseMapper;
-use App\Location\Infrastructure\Persistence\Event\CityCreatedEvent;
 use App\Location\Infrastructure\Persistence\Repositories\CityRepository;
 use App\Location\Infrastructure\Persistence\Repositories\WeatherForecastRepository;
 use App\Location\Presentation\Commands\GetWeatherForecast;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Event;
-
 
 class LocationServiceProvider extends ServiceProvider
 {
