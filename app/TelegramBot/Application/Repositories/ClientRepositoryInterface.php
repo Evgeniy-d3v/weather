@@ -4,7 +4,7 @@ namespace App\TelegramBot\Application\Repositories;
 
 use App\TelegramBot\Application\DTO\TelegramWebHookDto;
 use App\TelegramBot\Domain\Entities\ClientEntity;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 interface ClientRepositoryInterface
 {
@@ -12,8 +12,7 @@ interface ClientRepositoryInterface
 
     public function getClient(int $id): ?ClientEntity;
 
-    // todo переписать на домен клиента
-    public function getAllClientWithLastForecast(): Collection;
+    public function getAllClientWithLastForecast(): Builder;
 
     public function createNewClient(TelegramWebHookDto $dto): void;
 

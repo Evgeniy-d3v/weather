@@ -6,7 +6,7 @@ use App\Location\Application\DTO\CityInfoDto;
 use App\Location\Application\Repositories\CityRepositoryInterface;
 use App\Location\Domain\Entities\CityEntity;
 use App\Location\Infrastructure\Persistence\Model\City;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 class CityRepository implements CityRepositoryInterface
 {
@@ -26,9 +26,9 @@ class CityRepository implements CityRepositoryInterface
         return $model->id;
     }
 
-    public function getAllCitiesWithLastForecast(): Collection
+    public function getAllCitiesWithLastForecast(): Builder
     {
-        return City::query()->with('latestWeatherForecast')->get();
+        return City::query()->with('latestWeatherForecast');
     }
 
     public function getCityById(int $cityId): CityEntity

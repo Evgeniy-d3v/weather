@@ -6,7 +6,7 @@ use App\TelegramBot\Application\DTO\TelegramWebHookDto;
 use App\TelegramBot\Application\Repositories\ClientRepositoryInterface;
 use App\TelegramBot\Domain\Entities\ClientEntity;
 use App\TelegramBot\Infrastructure\Persistence\Model\Client;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 class ClientRepository implements ClientRepositoryInterface
 {
@@ -56,11 +56,10 @@ class ClientRepository implements ClientRepositoryInterface
         $this->save($entity);
     }
 
-    public function getAllClientWithLastForecast(): Collection
+    public function getAllClientWithLastForecast(): Builder
     {
         return Client::query()
-            ->with(['city.todayForecast'])
-            ->get();
+            ->with(['city.todayForecast']);
     }
 
     public function getClient(int $id): ?ClientEntity
