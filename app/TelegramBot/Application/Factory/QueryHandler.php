@@ -8,6 +8,7 @@ use App\TelegramBot\Application\JobDispatcherInterface;
 use App\TelegramBot\Application\Repositories\ClientRepositoryInterface;
 use App\TelegramBot\Domain\Entities\InlineKeyboard;
 use App\TelegramBot\Domain\Entities\MessageTextEnum;
+use App\TelegramBot\Domain\Entities\QueryCommandEnum;
 
 class QueryHandler implements TelegramWebHookHandlerInterface
 {
@@ -27,31 +28,31 @@ class QueryHandler implements TelegramWebHookHandlerInterface
             );
         }
         switch ($dto->text) {
-            case 'subscribe':
+            case QueryCommandEnum::SUBSCRIBE->value:
                 $this->clientRepository->saveSubscribe($client->getId());
 
                 return new TelegramSendMessageDto(
                     $dto->chatId,
                     MessageTextEnum::SUBSCRIBE_MESSAGE->value
                 );
-            case 'unsubscribe':
+            case QueryCommandEnum::UNSUBSCRIBE->value:
                 return new TelegramSendMessageDto(
                     $dto->chatId,
                     MessageTextEnum::UNSUBSCRIBE_MESSAGE->value
                 );
-            case 'change_city':
+            case QueryCommandEnum::CHANGE_CITY->value:
                 return new TelegramSendMessageDto(
                     $dto->chatId,
                     MessageTextEnum::CHANGE_CITY_MESSAGE->value
                 );
-            case 'get_current_weather':
+            case QueryCommandEnum::CURRENT_WEATHER->value:
                 $this->dispatcher->dispatchSendCurrentWeatherJob($client->getId());
 
                 return new TelegramSendMessageDto(
                     $dto->chatId,
                     MessageTextEnum::GET_CURRENT_WEATHER_FORECAST->value
                 );
-            case 'change_days':
+            case QueryCommandEnum::CHANGE_CONFIG->value:
                 return new TelegramSendMessageDto(
                     $dto->chatId,
                     MessageTextEnum::CONFIGURE_NEWS_LETTER_MESSAGE->value,
