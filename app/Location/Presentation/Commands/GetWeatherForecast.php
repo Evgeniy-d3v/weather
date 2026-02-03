@@ -7,7 +7,6 @@ use App\Location\Infrastructure\Job\GetAndSetDailyForecastJob;
 use App\Location\Infrastructure\Job\GetAndSetHourlyForecastJob;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 class GetWeatherForecast extends Command
 {
@@ -36,16 +35,13 @@ class GetWeatherForecast extends Command
      */
     public function handle(): void
     {
-        Log::debug('GetWeatherForecast start: ');
-        $cities = $this->cityRepository->getAllCitiesWithLastForecast();
+        $cities = $this->cityRepository->getAllCitiesWithLastForecast()->get();
         foreach ($cities as $city) {
             if (! $this->checkIsNewDay($city->time_zone, $city->latestWeatherForecast->day)) {
                 continue;
             }
             GetAndSetDailyForecastJob::dispatch($city->id);
-            Log::debug('GetWeatherForecast start: dispatch GetAndSetDailyForecastJob');
             GetAndSetHourlyForecastJob::dispatch($city->id);
-            Log::debug('GetWeatherForecast start: dispatch GetAndSetHourlyForecastJob');
 
         }
     }
