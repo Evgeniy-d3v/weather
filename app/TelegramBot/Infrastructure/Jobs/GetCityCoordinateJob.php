@@ -3,6 +3,8 @@
 namespace App\TelegramBot\Infrastructure\Jobs;
 
 use App\Location\Application\UseCase\CityHandler;
+use App\Location\Domain\Exceptions\CityNotFoundException;
+use App\Location\Domain\Exceptions\InvalidCityNameException;
 use App\Shared\Infrastructure\Cache\CacheLocker;
 use App\Shared\Infrastructure\Job\AbstractJob;
 use App\TelegramBot\Application\DTO\TelegramSendMessageDto;
@@ -33,20 +35,28 @@ class GetCityCoordinateJob extends AbstractJob
         //            Log::debug('Duplicate Telegram webhook received with update_id: ' . $this->payload['update_id']);
         //            return;
         //        }
+
         try {
             $cityHandler->createCity($this->cityName, $this->clientId);
-            SendTelegramBotMessageJob::dispatch(new TelegramSendMessageDto(
-                chatId: $this->chatId,
-                text: MessageTextEnum::CITY_FOUND->value,
-                replyMarkup: InlineKeyboard::subscribeWeatherNewsLetterConfig()
-            ));
-        } catch (\Exception $e) {
+            $this->sendMessage(
+                MessageTextEnum::CITY_FOUND->value,
+                InlineKeyboard::subscribeWeatherNewsLetterConfig()
+            );
+        } catch (InvalidCityNameException|CityNotFoundException $e) {
             Log::debug('GetCityCoordinateJob exception: '.$e->getMessage());
-            SendTelegramBotMessageJob::dispatch(new TelegramSendMessageDto(
-                chatId: $this->chatId,
-                text: MessageTextEnum::GET_CITY_INFO_EXCEPTION->value,
-            ));
+            $this->sendMessage(
+                MessageTextEnum::EXCEPTION->value.' '.$e->getMessage(),
+            );
         }
 
+    }
+
+    private function sendMessage(string $text, ?string $replyMarkup = null): void
+    {
+        SendTelegramBotMessageJob::dispatch(new TelegramSendMessageDto(
+            chatId: $this->chatId,
+            text: $text,
+            replyMarkup: $replyMarkup
+        ));
     }
 }

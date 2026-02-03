@@ -32,7 +32,8 @@ enum MessageTextEnum: string
     case COMMON_MESSAGE_FROM_CLIENT =
     'Вижу, ты хочешь что-то спросить. Вот что я умею:';
 
-    case EXCEPTION = 'Что - то пошло не так...';
+    case EXCEPTION = 'Что - то пошло не так... '
+    .'PS Скопируй название из гугла';
     case CHANGE_CITY_MESSAGE =
     'Хорошо, напиши название нового населённого пункта.';
 
