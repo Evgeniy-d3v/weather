@@ -14,4 +14,6 @@ interface CityRepositoryInterface
     public function getAllCitiesWithLastForecast(): Collection;
 
     public function getCityById(int $cityId): CityEntity;
+
+    public function getCityByName(string $cityName): ?CityEntity;
 }

@@ -59,4 +59,14 @@ class CityRepository implements CityRepositoryInterface
 
         return $model;
     }
+
+    public function getCityByName(string $cityName): ?CityEntity
+    {
+        $model = City::where('city_name', $cityName)->first();
+        if ($model === null) {
+            return null;
+        }
+
+        return $this->toDomainEntity($model);
+    }
 }

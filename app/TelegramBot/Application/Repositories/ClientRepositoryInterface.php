@@ -10,6 +10,8 @@ interface ClientRepositoryInterface
 {
     public function findByChatId(int $chatId): ?ClientEntity;
 
+    public function getClient(int $id): ?ClientEntity;
+
     // todo переписать на домен клиента
     public function getAllClientWithLastForecast(): Collection;
 

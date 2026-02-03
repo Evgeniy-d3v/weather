@@ -6,7 +6,8 @@ use App\Location\Application\DTO\CityInfoDto;
 use App\Location\Application\GeoDecoderApiExecutorInterface;
 use App\Location\Application\Repositories\CityRepositoryInterface;
 use App\Location\Application\WeatherApiExecutorInterface;
-use App\TelegramBot\Application\Repositories\ClientRepositoryInterface;
+use App\Location\Domain\Entities\CityEntity;
+use App\Shared\Events\CityAssignedToClientEvent;
 
 class CityHandler
 {
@@ -14,15 +15,19 @@ class CityHandler
         public GeoDecoderApiExecutorInterface $geoDecoderApiExecutor,
         public WeatherApiExecutorInterface $weatherApiExecutor,
         public CityRepositoryInterface $cityRepository,
-        public ClientRepositoryInterface $clientRepository,
     ) {}
 
     public function createCity(string $cityName, int $clientId): void
     {
-        $cityInfoDto = $this->getCityInfo($cityName);
+        $city = $this->findCity($cityName);
+        if ($city !== null) {
+            $cityId = $city->getId();
+        } else {
+            $cityInfoDto = $this->getCityInfo($cityName);
+            $cityId = $this->cityRepository->createCity($cityName, $clientId, $cityInfoDto);
+        }
 
-        $cityId = $this->cityRepository->createCity($cityName, $clientId, $cityInfoDto);
-        $this->clientRepository->addCityToClient($clientId, $cityId);
+        event(new CityAssignedToClientEvent($cityId, $clientId));
     }
 
     private function getCityInfo(string $cityName): CityInfoDto
@@ -36,5 +41,10 @@ class CityHandler
             latitude: $coordinateDto->latitude,
             longitude: $coordinateDto->longitude,
         );
+    }
+
+    private function findCity(string $cityName): ?CityEntity
+    {
+        return $this->cityRepository->getCityByName($cityName);
     }
 }
