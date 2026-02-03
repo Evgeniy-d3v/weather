@@ -1,6 +1,6 @@
 <?php
 
-namespace Shared\Job;
+namespace App\Shared\Infrastructure\Job;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,4 +12,5 @@ abstract class AbstractJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public int $tries = 10;
 }

@@ -3,10 +3,10 @@
 namespace App\TelegramBot\Infrastructure\Jobs;
 
 use App\Location\Application\Repositories\CityRepositoryInterface;
+use App\Shared\Infrastructure\Job\AbstractJob;
 use App\TelegramBot\Application\DTO\TelegramSendMessageDto;
 use App\TelegramBot\Application\Repositories\ClientRepositoryInterface;
 use Illuminate\Support\Facades\Log;
-use Shared\Job\AbstractJob;
 
 class SendForecastWhenReadyJob extends AbstractJob
 {

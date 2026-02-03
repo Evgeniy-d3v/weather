@@ -3,11 +3,13 @@
 namespace App\TelegramBot\Infrastructure\Jobs;
 
 use App\Location\Application\Repositories\CityRepositoryInterface;
+use App\Location\Infrastructure\Job\GetAndSetDailyForecastJob;
+use App\Location\Infrastructure\Job\GetAndSetHourlyForecastJob;
+use App\Shared\Infrastructure\Job\AbstractJob;
 use App\TelegramBot\Application\DTO\TelegramSendMessageDto;
 use App\TelegramBot\Application\Repositories\ClientRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use Shared\Job\AbstractJob;
 
 class SendCurrentWeatherJob extends AbstractJob
 {
@@ -47,7 +49,9 @@ class SendCurrentWeatherJob extends AbstractJob
 
         $forecastModel = $cityModel->todayForecast()->first();
         if ($forecastModel === null || ! isset($forecastModel->hourly_forecast)) {
-            Log::warning("No hourly forecast for city {$city->getId()}");
+            GetAndSetDailyForecastJob::dispatch($city->getId());
+            GetAndSetHourlyForecastJob::dispatch($city->getId());
+            $this->release(60);
 
             return;
         }

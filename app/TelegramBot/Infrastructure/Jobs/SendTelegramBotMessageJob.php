@@ -2,13 +2,13 @@
 
 namespace App\TelegramBot\Infrastructure\Jobs;
 
+use App\Shared\Domain\CachePrefixEnum;
+use App\Shared\Infrastructure\Cache\CacheKeyFactory;
+use App\Shared\Infrastructure\Cache\CacheLocker;
+use App\Shared\Infrastructure\Job\AbstractJob;
 use App\TelegramBot\Application\DTO\TelegramSendMessageDto;
 use App\TelegramBot\Application\TelegramBotApiInterface;
-use App\TelegramBot\Domain\Entities\CachePrefixEnum;
 use Illuminate\Support\Facades\Log;
-use Shared\Cache\CacheKeyFactory;
-use Shared\Cache\CacheLocker;
-use Shared\Job\AbstractJob;
 
 class SendTelegramBotMessageJob extends AbstractJob
 {

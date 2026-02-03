@@ -2,7 +2,7 @@
 
 namespace App\TelegramBot\Infrastructure\Persistence\Listener;
 
-use App\Shared\Events\CityAssignedToClientEvent;
+use App\Shared\Infrastructure\Events\CityAssignedToClientEvent;
 use App\TelegramBot\Application\Repositories\ClientRepositoryInterface;
 
 class CityAssignedToClientListener

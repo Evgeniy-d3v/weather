@@ -1,6 +1,6 @@
 <?php
 
-namespace App\TelegramBot\Domain\Entities;
+namespace App\Shared\Domain;
 
 enum CachePrefixEnum: string
 {

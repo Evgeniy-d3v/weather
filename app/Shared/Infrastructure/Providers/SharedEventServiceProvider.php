@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Shared\Providers;
+namespace App\Shared\Infrastructure\Providers;
 
-use App\Shared\Events\CityAssignedToClientEvent;
+use App\Shared\Infrastructure\Events\CityAssignedToClientEvent;
 use App\TelegramBot\Infrastructure\Persistence\Listener\CityAssignedToClientListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider;
 

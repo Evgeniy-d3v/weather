@@ -7,7 +7,7 @@ use App\Location\Application\GeoDecoderApiExecutorInterface;
 use App\Location\Application\Repositories\CityRepositoryInterface;
 use App\Location\Application\WeatherApiExecutorInterface;
 use App\Location\Domain\Entities\CityEntity;
-use App\Shared\Events\CityAssignedToClientEvent;
+use App\Shared\Infrastructure\Events\CityAssignedToClientEvent;
 
 class CityHandler
 {

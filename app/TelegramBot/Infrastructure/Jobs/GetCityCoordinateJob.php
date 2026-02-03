@@ -3,12 +3,12 @@
 namespace App\TelegramBot\Infrastructure\Jobs;
 
 use App\Location\Application\UseCase\CityHandler;
+use App\Shared\Infrastructure\Cache\CacheLocker;
+use App\Shared\Infrastructure\Job\AbstractJob;
 use App\TelegramBot\Application\DTO\TelegramSendMessageDto;
 use App\TelegramBot\Domain\Entities\InlineKeyboard;
 use App\TelegramBot\Domain\Entities\MessageTextEnum;
 use Illuminate\Support\Facades\Log;
-use Shared\Cache\CacheLocker;
-use Shared\Job\AbstractJob;
 
 class GetCityCoordinateJob extends AbstractJob
 {
