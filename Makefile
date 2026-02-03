@@ -13,9 +13,5 @@ reloadQueue:
 
 pint:
 	@echo "Running Pint (app/)..."
-	docker compose exec -T php vendor/bin/pint --config pint.json app/
-	@if ! git diff --quiet; then \
-    		echo ""; \
-    		echo " Pint formatted files."; \
-    		exit 1; \
-    	fi
+	docker compose exec -T php vendor/bin/pint --config pint.json app/ --dirty --repair
+
