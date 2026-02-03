@@ -4,7 +4,7 @@ namespace App\Location\Infrastructure\Job;
 
 use App\Location\Application\UseCase\WeatherHandler;
 use App\Shared\Infrastructure\Cache\CacheLocker;
-use App\Shared\infrastructure\Job\AbstractJob;
+use App\Shared\Infrastructure\Job\AbstractJob;
 use Illuminate\Support\Facades\Log;
 
 class GetAndSetDailyForecastJob extends AbstractJob
