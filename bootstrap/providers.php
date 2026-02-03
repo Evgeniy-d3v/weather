@@ -5,5 +5,5 @@ return [
     \App\TelegramBot\Infrastructure\Providers\TelegramBotServiceProvider::class,
     \App\Location\Infrastructure\Providers\LocationServiceProvider::class,
     \App\Location\Infrastructure\Providers\LocationEventServiceProvider::class,
-    \App\Shared\Providers\SharedEventServiceProvider::class,
+    \App\Shared\Infrastructure\Providers\SharedEventServiceProvider::class,
 ];
