@@ -4,6 +4,6 @@
 
 🤗 Ощущается: {{ $temperatureFeelsLike }} °C
 
-🌧 Осадки: {{ $weatherCondition }} мм
+🌧 Осадки: {{ $precipitation }} мм
 
-☁️ Погода: {{ $precipitation }}
+☁️ Погода: {{ $weatherCondition }}
