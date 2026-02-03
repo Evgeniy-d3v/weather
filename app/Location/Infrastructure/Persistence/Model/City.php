@@ -2,6 +2,7 @@
 
 namespace App\Location\Infrastructure\Persistence\Model;
 
+use App\Location\Infrastructure\Persistence\Event\CityCreatedEvent;
 use App\TelegramBot\Infrastructure\Persistence\Model\Client;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
