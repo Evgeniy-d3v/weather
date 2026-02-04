@@ -5,6 +5,7 @@ namespace App\TelegramBot\Infrastructure\Jobs;
 use App\Location\Application\UseCase\CityHandler;
 use App\Location\Domain\Exceptions\CityNotFoundException;
 use App\Location\Domain\Exceptions\InvalidCityNameException;
+use App\Shared\Domain\CachePrefixEnum;
 use App\Shared\Infrastructure\Cache\CacheLocker;
 use App\Shared\Infrastructure\Job\AbstractJob;
 use App\TelegramBot\Application\DTO\TelegramSendMessageDto;
@@ -23,18 +24,21 @@ class GetCityCoordinateJob extends AbstractJob
 
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(
         CityHandler $cityHandler,
         CacheLocker $cacheLocker,
     ): void {
-        // todo (переписать лок отрпавки)
-        //        if (!$cacheLocker->tryLock($this->payload['update_id'], 360)) {
-        //            Log::debug('Duplicate Telegram webhook received with update_id: ' . $this->payload['update_id']);
-        //            return;
-        //        }
+        if (! $cacheLocker->tryLock(
+            CachePrefixEnum::HANDLE_TELEGRAM_WEBHOOK_UPDATE->value,
+            60,
+            $this->cityName,
+            $this->clientId,
+            $this->chatId,
+        )) {
+            Log::debug('Duplicate GetCityCoordinateJob for city: '.$this->cityName.' and user from chat: '.$this->chatId);
+
+            return;
+        }
 
         try {
             $cityHandler->createCity($this->cityName, $this->clientId);

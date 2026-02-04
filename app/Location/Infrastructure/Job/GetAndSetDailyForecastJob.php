@@ -3,6 +3,7 @@
 namespace App\Location\Infrastructure\Job;
 
 use App\Location\Application\UseCase\WeatherHandler;
+use App\Shared\Domain\CachePrefixEnum;
 use App\Shared\Infrastructure\Cache\CacheLocker;
 use App\Shared\Infrastructure\Job\AbstractJob;
 use Illuminate\Support\Facades\Log;
@@ -19,8 +20,12 @@ class GetAndSetDailyForecastJob extends AbstractJob
         WeatherHandler $weatherHandler,
         CacheLocker $cacheLocker,
     ): void {
-        if (! $cacheLocker->tryLock('daily_forecast '.$this->cityId, 30)) {
-            Log::debug('Duplicate GetAndSetDailyForecastJob for cityId: '.$this->cityId);
+        if (! $cacheLocker->tryLock(
+            CachePrefixEnum::DAILY_FORECAST->value,
+            60,
+            $this->cityId
+        )) {
+            Log::debug('Duplicate getAndSetDailyForecastJob for cityId: '.$this->cityId);
 
             return;
         }

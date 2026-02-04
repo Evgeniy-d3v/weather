@@ -3,8 +3,11 @@
 namespace App\TelegramBot\Infrastructure\Jobs;
 
 use App\Location\Application\Repositories\CityRepositoryInterface;
+use App\Location\Application\Repositories\WeatherForecastRepositoryInterface;
 use App\Location\Infrastructure\Job\GetAndSetDailyForecastJob;
 use App\Location\Infrastructure\Job\GetAndSetHourlyForecastJob;
+use App\Shared\Domain\CachePrefixEnum;
+use App\Shared\Infrastructure\Cache\CacheLocker;
 use App\Shared\Infrastructure\Job\AbstractJob;
 use App\TelegramBot\Application\DTO\TelegramSendMessageDto;
 use App\TelegramBot\Application\Repositories\ClientRepositoryInterface;
@@ -21,17 +24,22 @@ class SendCurrentWeatherJob extends AbstractJob
     }
 
     public function handle(
+        WeatherForecastRepositoryInterface $weatherForecastRepository,
         ClientRepositoryInterface $clientRepository,
-        CityRepositoryInterface $cityRepository
+        CityRepositoryInterface $cityRepository,
+        CacheLocker $cacheLocker,
     ): void {
-        Log::debug('SendCurrentWeatherJob');
-        $client = $clientRepository->getClient($this->clientId);
-
-        if ($client === null || ! $client->hasCity()) {
-            Log::warning("Client {$this->clientId} has no city");
+        if (! $cacheLocker->tryLock(
+            CachePrefixEnum::SEND_HOURLY_FORECAST_PREFIX->value,
+            60,
+            $this->clientId
+        )
+        ) {
+            Log::debug('Duplicate sendCurrentWeatherJob for client: '.$this->clientId);
 
             return;
         }
+        $client = $clientRepository->getClient($this->clientId);
 
         $city = $cityRepository->getCityById($client->getCityId());
         $now = Carbon::now($city->getTimeZone());
@@ -39,16 +47,9 @@ class SendCurrentWeatherJob extends AbstractJob
         $rounded = $rounded->minute < 30
             ? $rounded->startOfHour()
             : $rounded->addHour()->startOfHour();
-        // todo отрефакторить
-        $cityModel = \App\Location\Infrastructure\Persistence\Model\City::find($city->getId());
-        if ($cityModel === null) {
-            Log::warning("City {$city->getId()} not found");
 
-            return;
-        }
-
-        $forecastModel = $cityModel->todayForecast()->first();
-        if ($forecastModel === null || ! isset($forecastModel->hourly_forecast)) {
+        $hourlyForecast = $weatherForecastRepository->getTodayForecast($city->getId())->getHourlyForecast();
+        if ($hourlyForecast === null) {
             GetAndSetDailyForecastJob::dispatch($city->getId());
             GetAndSetHourlyForecastJob::dispatch($city->getId());
             $this->release(60);
@@ -56,12 +57,9 @@ class SendCurrentWeatherJob extends AbstractJob
             return;
         }
 
-        $hourlyForecast = $forecastModel->hourly_forecast;
         $key = $rounded->format('H:00');
 
         if (! isset($hourlyForecast[$key])) {
-            Log::warning("No forecast data for key {$key}");
-
             return;
         }
 

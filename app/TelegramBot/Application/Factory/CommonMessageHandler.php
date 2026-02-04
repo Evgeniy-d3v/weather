@@ -21,10 +21,12 @@ class CommonMessageHandler implements TelegramWebHookHandlerInterface
 
         $client = $this->clientRepository->findByChatId($dto->chatId);
         if ($client === null) {
+            $this->clientRepository->createNewClient($dto);
+
             return new TelegramSendMessageDto(
                 $dto->chatId,
-                MessageTextEnum::EXCEPTION->value,
-                InlineKeyboard::mainMenu()
+                MessageTextEnum::FIRST_MESSAGE->value,
+                InlineKeyboard::subscriptionMenu()
             );
         }
         if (! $client->getCityId()) {
