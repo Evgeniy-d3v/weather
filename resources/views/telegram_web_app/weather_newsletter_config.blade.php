@@ -5,12 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Расписание</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
     <style>
         body {
             font-family: system-ui;
             margin: 12px;
             padding-bottom: 90px;
+            background: #0f1b26;
+            color: #fff;
         }
+
+        h3 {
+            color: #1c8ed6;
+            font-weight: 600;
+        }
+
+        .row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
         .grid {
             display: grid;
             grid-auto-flow: column;
@@ -18,31 +33,31 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 8px;
         }
-        button { padding: 10px; border: 1px solid #ccc; border-radius: 10px; background: #fff; }
-        button.active { border-color: #000; font-weight: 700; }
-        .row { display:flex; gap:8px; flex-wrap:wrap; }
-        .day { padding: 8px 10px; }
-        .actions {
-            position: fixed;
-            right: 12px;
-            bottom: 12px;
-            display: flex;
-            gap: 10px;
-            z-index: 100;
-        }
-        .actions button {
-            padding: 14px 16px;
-            border-radius: 14px;
-            font-size: 16px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-        }
-        h3 {
-            color: #1c8ed6;
-            font-weight: 600;
-        }
-        .day { padding: 8px 10px; position: relative; }
 
-        .day.filled::after {
+        button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+        }
+
+        button.active {
+            border-color: #000;
+            font-weight: 700;
+        }
+
+        .day {
+            position: relative;
+            padding: 8px 10px;
+        }
+
+        .hour {
+            position: relative;
+        }
+
+        .filled::after {
             content: "✓";
             position: absolute;
             top: -6px;
@@ -59,11 +74,27 @@
             font-size: 12px;
             line-height: 1;
         }
+
+        .actions {
+            position: fixed;
+            right: 12px;
+            bottom: 12px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .actions button {
+            padding: 14px 16px;
+            border-radius: 14px;
+            font-size: 16px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        }
     </style>
 </head>
 <body>
-<h3>Выбери день</h3>
 
+<h3>Выбери день</h3>
 <div class="row" id="days"></div>
 
 <h3>Часы (0–23)</h3>
@@ -79,41 +110,52 @@
     tg.expand();
 
     const dayLabels = [
-        {id: 1, name: 'Пн'}, {id: 2, name: 'Вт'}, {id: 3, name: 'Ср'}, {id: 4, name: 'Чт'},
-        {id: 5, name: 'Пт'}, {id: 6, name: 'Сб'}, {id: 7, name: 'Вс'},
+        {id: 1, name: 'Пн'},
+        {id: 2, name: 'Вт'},
+        {id: 3, name: 'Ср'},
+        {id: 4, name: 'Чт'},
+        {id: 5, name: 'Пт'},
+        {id: 6, name: 'Сб'},
+        {id: 7, name: 'Вс'},
     ];
 
     const schedule = {};
     let currentDay = 1;
 
-    function ensureDay(d) {
-        const key = String(d);
+    function ensureDay(day) {
+        const key = String(day);
         if (!schedule[key]) schedule[key] = [];
     }
 
-    function toggleHour(d, h) {
-        ensureDay(d);
-        const key = String(d);
-        const idx = schedule[key].indexOf(h);
-        if (idx === -1) schedule[key].push(h);
-        else schedule[key].splice(idx, 1);
-        schedule[key].sort((a,b)=>a-b);
+    function toggleHour(day, hour) {
+        ensureDay(day);
+        const list = schedule[String(day)];
+        const idx = list.indexOf(hour);
+        if (idx === -1) list.push(hour);
+        else list.splice(idx, 1);
+        list.sort((a, b) => a - b);
     }
+
     function renderDays() {
         const el = document.getElementById('days');
         el.innerHTML = '';
+
         dayLabels.forEach(d => {
-            const b = document.createElement('button');
-
             const key = String(d.id);
-            const isActive = d.id === currentDay;
-            const isFilled = (schedule[key]?.length ?? 0) > 0;
+            const btn = document.createElement('button');
 
-            b.className = 'day' + (isActive ? ' active' : '') + (isFilled ? ' filled' : '');
-            b.textContent = d.name;
+            btn.classList.add('day');
+            if (d.id === currentDay) btn.classList.add('active');
+            if ((schedule[key]?.length ?? 0) > 0) btn.classList.add('filled');
 
-            b.onclick = () => { currentDay = d.id; renderDays(); renderHours(); };
-            el.appendChild(b);
+            btn.textContent = d.name;
+            btn.onclick = () => {
+                currentDay = d.id;
+                renderDays();
+                renderHours();
+            };
+
+            el.appendChild(btn);
         });
     }
 
@@ -122,18 +164,30 @@
         const selected = new Set(schedule[String(currentDay)]);
         const el = document.getElementById('hours');
         el.innerHTML = '';
-        for (let h=0; h<24; h++) {
-            const b = document.createElement('button');
-            b.textContent = String(h).padStart(2,'0') + ':00';
-            if (selected.has(h)) b.classList.add('active');
-            b.onclick = () => { toggleHour(currentDay, h); renderHours(); };
-            el.appendChild(b);
+
+        for (let h = 0; h < 24; h++) {
+            const btn = document.createElement('button');
+            btn.classList.add('hour');
+            btn.textContent = String(h).padStart(2, '0') + ':00';
+
+            if (selected.has(h)) {
+                btn.classList.add('active', 'filled');
+            }
+
+            btn.onclick = () => {
+                toggleHour(currentDay, h);
+                renderHours();
+                renderDays();
+            };
+
+            el.appendChild(btn);
         }
     }
 
     document.getElementById('clear').onclick = () => {
         schedule[String(currentDay)] = [];
         renderHours();
+        renderDays();
     };
 
     document.getElementById('save').onclick = () => {
