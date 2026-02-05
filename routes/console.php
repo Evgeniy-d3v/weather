@@ -8,7 +8,7 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-app(Schedule::class)->command('weather:get-forecast')
+app(Schedule::class)->command('get-weather-forecast')
     ->hourly()
     ->withoutOverlapping();
 app(Schedule::class)->command('telegram:send-forecast-to-client')

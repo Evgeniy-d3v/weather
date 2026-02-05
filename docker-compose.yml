@@ -92,6 +92,22 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
       - weather-network
+  ## Крон*
+  scheduler:
+    image: weather-php
+    container_name: weather-scheduler
+    working_dir: /var/www/html
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www/html
+    command: php artisan schedule:work
+    depends_on:
+      - php
+      - mysql
+      - redis
+      - rabbitmq
+    networks:
+      - weather-network
 
   # Очереди
   queue-handle_telegram_webhook:
