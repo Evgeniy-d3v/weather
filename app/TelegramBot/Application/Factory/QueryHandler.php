@@ -21,6 +21,8 @@ class QueryHandler implements TelegramWebHookHandlerInterface
     {
         $client = $this->clientRepository->findByChatId($dto->chatId);
         if ($client === null) {
+            $this->clientRepository->createNewClient($dto);
+
             return new TelegramSendMessageDto(
                 $dto->chatId,
                 MessageTextEnum::FIRST_MESSAGE->value,
@@ -36,11 +38,15 @@ class QueryHandler implements TelegramWebHookHandlerInterface
                     MessageTextEnum::SUBSCRIBE_MESSAGE->value
                 );
             case QueryCommandEnum::UNSUBSCRIBE->value:
+                $this->clientRepository->deleteClient($client->getId());
+
                 return new TelegramSendMessageDto(
                     $dto->chatId,
                     MessageTextEnum::UNSUBSCRIBE_MESSAGE->value
                 );
             case QueryCommandEnum::CHANGE_CITY->value:
+                $this->clientRepository->deleteCity($client->getId());
+
                 return new TelegramSendMessageDto(
                     $dto->chatId,
                     MessageTextEnum::CHANGE_CITY_MESSAGE->value
