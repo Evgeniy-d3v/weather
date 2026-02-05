@@ -10,7 +10,7 @@ interface CityRepositoryInterface
 {
     public function createCity(string $cityName, int $clientId, CityInfoDto $dto): int;
 
-    public function getAllCitiesWithLastForecast(): Builder;
+    public function getAllCitiesWithTodayForecast(): Builder;
 
     public function getCityById(int $cityId): CityEntity;
 

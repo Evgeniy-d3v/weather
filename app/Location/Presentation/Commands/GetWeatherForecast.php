@@ -5,7 +5,6 @@ namespace App\Location\Presentation\Commands;
 use App\Location\Application\Repositories\CityRepositoryInterface;
 use App\Location\Infrastructure\Job\GetAndSetDailyForecastJob;
 use App\Location\Infrastructure\Job\GetAndSetHourlyForecastJob;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class GetWeatherForecast extends Command
@@ -35,25 +34,14 @@ class GetWeatherForecast extends Command
      */
     public function handle(): void
     {
-        $cities = $this->cityRepository->getAllCitiesWithLastForecast()->get();
+        $cities = $this->cityRepository->getAllCitiesWithTodayForecast()->get();
         foreach ($cities as $city) {
-            if (! $this->checkIsNewDay($city->time_zone, $city->latestWeatherForecast->day)) {
+            if ($city->todayForecast != null) {
                 continue;
             }
             GetAndSetDailyForecastJob::dispatch($city->id);
             GetAndSetHourlyForecastJob::dispatch($city->id);
 
         }
-    }
-
-    private function checkIsNewDay(string $cityTz, string $cityDay): bool
-    {
-        $now = Carbon::now($cityTz)->toDateString();
-
-        if ($cityDay === $now) {
-            return false;
-        }
-
-        return true;
     }
 }

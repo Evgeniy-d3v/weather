@@ -26,9 +26,9 @@ class CityRepository implements CityRepositoryInterface
         return $model->id;
     }
 
-    public function getAllCitiesWithLastForecast(): Builder
+    public function getAllCitiesWithTodayForecast(): Builder
     {
-        return City::query()->with('latestWeatherForecast');
+        return City::query()->with('todayForecast');
     }
 
     public function getCityById(int $cityId): CityEntity
