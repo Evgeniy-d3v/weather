@@ -1,8 +1,6 @@
 # Шаблон для воркеров
 x-worker-base: &worker-base
-  build:
-    context: .
-    dockerfile: Dockerfile
+  image: weather-php
   working_dir: /var/www/html
   restart: unless-stopped
   volumes:
@@ -18,6 +16,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: weather-php
     container_name: weather-php
     restart: unless-stopped
     working_dir: /var/www/html
