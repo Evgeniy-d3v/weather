@@ -5,6 +5,8 @@ namespace App\TelegramBot\Presentation\Commands;
 use App\Location\Infrastructure\Job\GetAndSetDailyForecastJob;
 use App\Location\Infrastructure\Job\GetAndSetHourlyForecastJob;
 use App\TelegramBot\Application\Repositories\ClientRepositoryInterface;
+use App\TelegramBot\Domain\Entities\ClientEntity;
+use App\TelegramBot\Domain\Entities\ClientEntityCollection;
 use App\TelegramBot\Infrastructure\Jobs\SendForecastWhenReadyJob;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -12,7 +14,7 @@ use Illuminate\Console\Command;
 class SendDailySubscribeForecastToClients extends Command
 {
     public function __construct(
-        private readonly ClientRepositoryInterface $clientRepository
+        private readonly ClientRepositoryInterface $clientRepository,
     ) {
         parent::__construct();
     }
@@ -23,37 +25,32 @@ class SendDailySubscribeForecastToClients extends Command
 
     public function handle(): void
     {
-        $dispatchedCityIds = [];
 
-        $this->clientRepository->getAllClientWithLastForecast()
-            ->chunkById(1000, function ($clients) use (&$dispatchedCityIds) {
-                foreach ($clients as $client) {
-                    if (! $client->city) {
-                        continue;
-                    }
-
-                    if (! $this->checkTime($client->sent_time, $client->city->time_zone)) {
-                        continue;
-                    }
-
-                    $cityId = $client->city->id;
-
-                    $forecast = $client->city->todayForecast;
-
-                    if ($forecast === null) {
-                        if (! isset($dispatchedCityIds[$cityId])) {
-                            GetAndSetDailyForecastJob::dispatch($cityId);
-                            GetAndSetHourlyForecastJob::dispatch($cityId);
-                            $dispatchedCityIds[$cityId] = true;
-                        }
-                        SendForecastWhenReadyJob::dispatch($client->id)->delay(now()->addMinutes(2));
-
-                        continue;
-                    }
-
-                    SendForecastWhenReadyJob::dispatch($client->id);
+        /** @var ClientEntityCollection $clientEntityCollection */
+        foreach ($this->clientRepository->getYieldedClient(1000) as $clientEntityCollection) {
+            $dispatchedCityIds = [];
+            /** @var ClientEntity $clientEntity */
+            foreach ($clientEntityCollection as $clientEntity) {
+                if (! $clientEntity->hasCity()) {
+                    continue;
                 }
-            });
+                if (! $this->checkTime($clientEntity->getSentTime(), $clientEntity->getTimeZone())) {
+                    continue;
+                }
+                $clientTodayDailyForecast = $clientEntity->getTodayForecast()['daily'];
+                if ($clientTodayDailyForecast === null) {
+                    if (! isset($dispatchedCityIds[$clientEntity->getCityId()])) {
+                        GetAndSetDailyForecastJob::dispatch($clientEntity->getCityId());
+                        GetAndSetHourlyForecastJob::dispatch($clientEntity->getCityId());
+                        $dispatchedCityIds[$clientEntity->getCityId()] = true;
+                    }
+                    SendForecastWhenReadyJob::dispatch($clientEntity->getId())->delay(now()->addMinutes(2));
+
+                    continue;
+                }
+                SendForecastWhenReadyJob::dispatch($clientEntity->getId());
+            }
+        }
     }
 
     private function checkTime(array $sentTime, string $timeZone): bool

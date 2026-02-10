@@ -12,6 +12,8 @@ final class ClientEntity
         private bool $isSubscribed,
         private ?int $cityId,
         private ?array $sentTime,
+        private ?array $todayForecast,
+        private ?string $timeZone,
     ) {}
 
     public function getId(): int
@@ -77,5 +79,25 @@ final class ClientEntity
     public function updateSentTime(?array $sentTime): void
     {
         $this->sentTime = $sentTime;
+    }
+
+    public function setTodayForecast(array $todayForecast): void
+    {
+        $this->todayForecast = $todayForecast;
+    }
+
+    public function getTodayForecast(): array
+    {
+        return $this->todayForecast;
+    }
+
+    public function setTimeZone(string $timeZone): void
+    {
+        $this->timeZone = $timeZone;
+    }
+
+    public function getTimeZone(): string
+    {
+        return $this->timeZone;
     }
 }

@@ -5,8 +5,10 @@ namespace App\TelegramBot\Infrastructure\Persistence\Repositories;
 use App\TelegramBot\Application\DTO\TelegramWebHookDto;
 use App\TelegramBot\Application\Repositories\ClientRepositoryInterface;
 use App\TelegramBot\Domain\Entities\ClientEntity;
+use App\TelegramBot\Domain\Entities\ClientEntityCollection;
 use App\TelegramBot\Infrastructure\Persistence\Model\Client;
-use Illuminate\Database\Eloquent\Builder;
+use Generator;
+use Illuminate\Support\LazyCollection;
 
 class ClientRepository implements ClientRepositoryInterface
 {
@@ -29,6 +31,8 @@ class ClientRepository implements ClientRepositoryInterface
             isSubscribed: false,
             cityId: null,
             sentTime: null,
+            todayForecast: null,
+            timeZone: null,
         );
         $this->save($entity);
     }
@@ -54,12 +58,6 @@ class ClientRepository implements ClientRepositoryInterface
         $entity->updateSentTime($data['schedule'] ?? null);
 
         $this->save($entity);
-    }
-
-    public function getAllClientWithLastForecast(): Builder
-    {
-        return Client::query()
-            ->with(['city.todayForecast']);
     }
 
     public function getClient(int $id): ?ClientEntity
@@ -98,6 +96,32 @@ class ClientRepository implements ClientRepositoryInterface
             ->delete();
     }
 
+    public function getYieldedClient(int $packSize): Generator
+    {
+        $clientEntityCollection = new ClientEntityCollection;
+
+        foreach ($this->getChunkedClient($packSize) as $model) {
+            $clientEntityCollection->add($this->toDomainEntity($model));
+
+            if ($clientEntityCollection->count() >= $packSize) {
+                yield $clientEntityCollection;
+                $clientEntityCollection = new ClientEntityCollection;
+            }
+        }
+
+        if (! $clientEntityCollection->isEmpty()) {
+            yield $clientEntityCollection;
+        }
+
+    }
+
+    private function getChunkedClient(int $packSize): LazyCollection
+    {
+        return Client::query()
+            ->with(['city.todayForecast'])
+            ->lazyById($packSize);
+    }
+
     private function toDomainEntity(?Client $model): ?ClientEntity
     {
         if ($model === null) {
@@ -112,6 +136,11 @@ class ClientRepository implements ClientRepositoryInterface
             isSubscribed: $model->is_subscribed,
             cityId: $model->city_id,
             sentTime: $model->sent_time,
+            todayForecast: [
+                'hourly' => $model->city?->todayForecast?->hourly_forecast,
+                'daily' => $model->city?->todayForecast?->daily_forecast,
+            ],
+            timeZone: $model->city?->time_zone,
         );
     }
 

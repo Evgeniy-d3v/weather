@@ -4,15 +4,15 @@ namespace App\TelegramBot\Application\Repositories;
 
 use App\TelegramBot\Application\DTO\TelegramWebHookDto;
 use App\TelegramBot\Domain\Entities\ClientEntity;
-use Illuminate\Database\Eloquent\Builder;
+use Generator;
 
 interface ClientRepositoryInterface
 {
+    public function getYieldedClient(int $packSize): Generator;
+
     public function findByChatId(int $chatId): ?ClientEntity;
 
     public function getClient(int $id): ?ClientEntity;
-
-    public function getAllClientWithLastForecast(): Builder;
 
     public function createNewClient(TelegramWebHookDto $dto): void;
 
