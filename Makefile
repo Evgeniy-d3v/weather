@@ -15,5 +15,5 @@ reloadQueue:
 
 pint:
 	@echo "Running Pint (app/)..."
-	docker compose exec -T php vendor/bin/pint --config pint.json app/ --dirty --repair
+	docker compose exec -T php vendor/bin/pint --config pint.json app/ tests/ --dirty --repair
 
