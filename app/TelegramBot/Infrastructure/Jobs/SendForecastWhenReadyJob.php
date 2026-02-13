@@ -27,7 +27,7 @@ class SendForecastWhenReadyJob extends AbstractJob
     ): void {
         if (! $cacheLocker->tryLock(
             CachePrefixEnum::SEND_DAILY_FORECAST_PREFIX->value,
-            60,
+            59,
             $this->clientId
         )
         ) {

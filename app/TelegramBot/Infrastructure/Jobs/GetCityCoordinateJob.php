@@ -30,7 +30,7 @@ class GetCityCoordinateJob extends AbstractJob
     ): void {
         if (! $cacheLocker->tryLock(
             CachePrefixEnum::HANDLE_TELEGRAM_WEBHOOK_UPDATE->value,
-            60,
+            59,
             $this->cityName,
             $this->clientId,
             $this->chatId,

@@ -23,7 +23,7 @@ class SendTelegramBotMessageJob extends AbstractJob
     ): void {
         if (! $cacheLocker->tryLock(
             CachePrefixEnum::SEND_MESSAGE->value,
-            60,
+            59,
             CachePrefixEnum::SEND_MESSAGE->value,
             $this->telegramSendMessageDto->chatId,
             $this->telegramSendMessageDto->text

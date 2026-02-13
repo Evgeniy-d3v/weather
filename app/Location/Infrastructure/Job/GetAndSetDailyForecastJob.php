@@ -22,7 +22,7 @@ class GetAndSetDailyForecastJob extends AbstractJob
     ): void {
         if (! $cacheLocker->tryLock(
             CachePrefixEnum::DAILY_FORECAST->value,
-            60,
+            59,
             $this->cityId
         )) {
             Log::debug('Duplicate getAndSetDailyForecastJob for cityId: '.$this->cityId);

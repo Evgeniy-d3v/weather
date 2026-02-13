@@ -115,7 +115,7 @@ services:
     command: >
       php artisan queue:work rabbitmq
       --queue=handle_telegram_webhook
-      --sleep=3 --tries=3 --timeout=90 --backoff=30 --max-time=3600
+      --sleep=3 --tries=3 --timeout=90 --backoff=60 --max-time=3600
 
   queue-send-telegram:
     <<: *worker-base
@@ -131,7 +131,7 @@ services:
     command: >
       php artisan queue:work rabbitmq
       --queue=get_city_coordinate
-      --sleep=3 --tries=3 --timeout=90 --backoff=30 --max-time=3600
+      --sleep=3 --tries=3 --timeout=90 --backoff=60 --max-time=3600
 
   queue-daily_forecast:
     <<: *worker-base
@@ -139,7 +139,7 @@ services:
     command: >
       php artisan queue:work rabbitmq
       --queue=daily_forecast
-      --sleep=3 --tries=3 --timeout=90 --backoff=30 --max-time=3600
+      --sleep=3 --tries=3 --timeout=90 --backoff=60 --max-time=3600
 
   queue-hourly_forecast:
     <<: *worker-base
@@ -147,7 +147,7 @@ services:
     command: >
       php artisan queue:work rabbitmq
       --queue=hourly_forecast
-      --sleep=3 --tries=3 --timeout=90 --backoff=30 --max-time=3600
+      --sleep=3 --tries=3 --timeout=90 --backoff=60 --max-time=3600
 
   queue-send_forecast_report:
     <<: *worker-base
@@ -155,7 +155,7 @@ services:
     command: >
       php artisan queue:work rabbitmq
       --queue=send_forecast_report
-      --sleep=3 --tries=3 --timeout=90 --backoff=30 --max-time=3600
+      --sleep=3 --tries=3 --timeout=90 --backoff=60 --max-time=3600
 
   queue-send_current_weather:
     <<: *worker-base
@@ -163,7 +163,7 @@ services:
     command: >
       php artisan queue:work rabbitmq
       --queue=send_current_weather
-      --sleep=3 --tries=3 --timeout=90 --backoff=30 --max-time=3600
+      --sleep=3 --tries=3 --timeout=90 --backoff=60 --max-time=3600
 networks:
   weather-network:
     driver: bridge

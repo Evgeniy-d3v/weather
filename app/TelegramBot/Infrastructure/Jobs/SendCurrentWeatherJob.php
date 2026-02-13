@@ -31,7 +31,7 @@ class SendCurrentWeatherJob extends AbstractJob
     ): void {
         if (! $cacheLocker->tryLock(
             CachePrefixEnum::SEND_HOURLY_FORECAST_PREFIX->value,
-            60,
+            59,
             $this->clientId
         )
         ) {

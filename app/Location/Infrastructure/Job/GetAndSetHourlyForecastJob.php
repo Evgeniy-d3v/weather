@@ -22,7 +22,7 @@ class GetAndSetHourlyForecastJob extends AbstractJob
     ): void {
         if (! $cacheLocker->tryLock(
             CachePrefixEnum::HOURLY_FORECAST->value,
-            60,
+            59,
             $this->cityId
         )) {
             Log::debug('Duplicate getAndSetHourlyForecastJob for cityId: '.$this->cityId);

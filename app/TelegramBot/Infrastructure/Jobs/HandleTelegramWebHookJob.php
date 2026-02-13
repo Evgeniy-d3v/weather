@@ -25,7 +25,7 @@ class HandleTelegramWebHookJob extends AbstractJob
     ): void {
         if (! $cacheLocker->tryLock(
             CachePrefixEnum::HANDLE_TELEGRAM_WEBHOOK_UPDATE->value,
-            60,
+            59,
             $this->payload['update_id']
         )) {
             Log::debug('Duplicate Telegram webhook received with update_id: '.$this->payload['update_id']);
